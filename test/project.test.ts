@@ -2,7 +2,7 @@
 import { assert } from "chai";
 import path from "path";
 
-import { FhenixHardhatRuntimeEnvironment } from "./FhenixHardhatRuntimeEnvironment";
+import { FhenixHardhatRuntimeEnvironment } from "../src/FhenixHardhatRuntimeEnvironment";
 
 import { useEnvironment } from "./helpers";
 
