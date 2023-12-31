@@ -2,7 +2,7 @@
 import { assert } from "chai";
 import path from "path";
 
-import { ExampleHardhatRuntimeEnvironmentField } from "../src/ExampleHardhatRuntimeEnvironmentField";
+import { FhenixHardhatRuntimeEnvironment } from "./FhenixHardhatRuntimeEnvironment";
 
 import { useEnvironment } from "./helpers";
 
@@ -11,14 +11,11 @@ describe("Integration tests examples", function () {
     useEnvironment("hardhat-project");
 
     it("Should add the example field", function () {
-      assert.instanceOf(
-        this.hre.example,
-        ExampleHardhatRuntimeEnvironmentField
-      );
+      assert.instanceOf(this.hre.fhenix, FhenixHardhatRuntimeEnvironment);
     });
 
     it("The example field should say hello", function () {
-      assert.equal(this.hre.example.sayHello(), "hello");
+      assert.equal(this.hre.fhenix.sayHello(), "hello");
     });
   });
 
@@ -28,17 +25,17 @@ describe("Integration tests examples", function () {
     it("Should add the newPath to the config", function () {
       assert.equal(
         this.hre.config.paths.newPath,
-        path.join(process.cwd(), "asd")
+        path.join(process.cwd(), "asd"),
       );
     });
   });
 });
 
 describe("Unit tests examples", function () {
-  describe("ExampleHardhatRuntimeEnvironmentField", function () {
+  describe("FhenixHardhatRuntimeEnvironment", function () {
     describe("sayHello", function () {
       it("Should say hello", function () {
-        const field = new ExampleHardhatRuntimeEnvironmentField();
+        const field = new FhenixHardhatRuntimeEnvironment();
         assert.equal(field.sayHello(), "hello");
       });
     });
