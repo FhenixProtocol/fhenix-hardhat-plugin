@@ -1,62 +1,28 @@
-// import util from "util";
-var Docker = require("dockerode");
-// export const exec = util.promisify(require("child_process").exec);
+const child_process = require("child_process");
 
-const IMAGE = "ghcr.io/fhenixprotocol/fhenix-node-dev:v0.0.7-standalone";
+const IMAGE = "ghcr.io/fhenixprotocol/fhenix-node-dev:v0.0.9-standalone";
 
-const containers: Promise<any>[] = [];
+const containers: string[] = [];
 
 export class FhenixHardhatRuntimeEnvironment {
-  private container: Promise<any>;
-  private docker;
+  public readonly name: string;
+  public readonly rpcPort: number;
+  public readonly wsPort: number;
+  public readonly faucetPort: number;
 
   public constructor() {
-    console.log("Starting LocalFhenix...");
+    this.name = `localfhenix-${Date.now()}`;
 
-    this.docker = new Docker({ socketPath: "/var/run/docker.sock" });
+    // TODO check if ports are available
+    this.rpcPort = randomBetween(1025, 65536);
+    this.wsPort = randomBetween(1025, 65536);
+    this.faucetPort = randomBetween(1025, 65536);
 
-    // this.docker.pull(IMAGE, (err: any, stream: any) => {
-    // if (err) {
-    //   throw err;
-    // }
+    child_process.execSync(
+      `docker run -d --rm -p ${this.rpcPort}:8547 -p ${this.wsPort}:8548 -p ${this.faucetPort}:3000 --name "${this.name}" "${IMAGE}"`,
+    );
 
-    // const onFinished = async (err: any, output: any) => {
-    //   if (err != null) {
-    //     throw err;
-    //   }
-
-    this.container = this.docker
-      .createContainer({
-        Image: IMAGE,
-        name: `localfhenix-${Date.now()}`,
-        // AttachStdin: false,
-        // AttachStdout: true,
-        // AttachStderr: true,
-        // Tty: true,
-        ExposedPorts: { "8547/tcp": {}, "8548/tcp": {}, "3000/tcp": {} },
-        HostConfig: {
-          // PortBindings: {
-          //   "8547/tcp": [{ HostPort: "8545" }],
-          //   "8548/tcp": [{ HostPort: "8548" }],
-          //   "3000/tcp": [{ HostPort: "3000" }],
-          // },
-        },
-      })
-      .then((container: any) => {
-        return container.start().then(() => {
-          return container;
-        });
-      });
-
-    containers.push(this.container);
-
-    //   };
-    //   const onProgress = (event: any) => {
-    //     console.log("here2");
-    //   };
-
-    //   this.docker.modem.followProgress(stream, onFinished, onProgress);
-    // });
+    containers.push(this.name);
   }
 
   public sayHello() {
@@ -64,29 +30,12 @@ export class FhenixHardhatRuntimeEnvironment {
   }
 }
 
-//import child_process module
-const child_process = require("child_process");
-// Sleep for 5 seconds
+function randomBetween(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
 
 function exitHandler() {
-  console.log("exitHandler()...");
-  console.log(containers);
-  for (const containerPromise of containers) {
-    let wait = true;
-    containerPromise
-      .then((container: any) => {
-        console.log(`Stopping ${JSON.stringify(container)}...`);
-        return container.remove({ force: true });
-      })
-      .then(() => {
-        wait = false;
-      });
-
-    while (wait) {
-      console.log("containerPromise", containerPromise);
-      child_process.execSync("sleep 0.5");
-    }
-  }
+  child_process.execSync(`docker rm -f ${containers.join(" ")}`);
 }
 
 process.on("exit", exitHandler);
