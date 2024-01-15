@@ -1,8 +1,14 @@
 import child_process from "child_process";
+import fs from "fs";
 import util from "util";
-const exec = util.promisify(child_process.exec);
 
-const IMAGE = require(__dirname + "/../package.json").config.image;
+const IMAGE = JSON.parse(
+  fs.readFileSync(__dirname + "/../package.json", {
+    encoding: "utf-8",
+  }),
+).config.image;
+
+const exec = util.promisify(child_process.exec);
 
 const containers: string[] = [];
 
