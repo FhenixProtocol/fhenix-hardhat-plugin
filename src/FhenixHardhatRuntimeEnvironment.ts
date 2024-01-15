@@ -1,8 +1,8 @@
-import util from "util";
 import child_process from "child_process";
+import util from "util";
 const exec = util.promisify(child_process.exec);
 
-const IMAGE = "ghcr.io/fhenixprotocol/fhenix-node-dev:v0.0.9-standalone";
+const IMAGE = require(__dirname + "/../package.json").config.image;
 
 const containers: string[] = [];
 
