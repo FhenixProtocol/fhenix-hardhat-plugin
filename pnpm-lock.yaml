@@ -20,6 +20,9 @@ devDependencies:
   chai:
     specifier: ^4.2.0
     version: 4.3.10
+  ethers:
+    specifier: ^5.7.0
+    version: 5.7.2
   hardhat:
     specifier: ^2.0.0
     version: 2.19.4(ts-node@8.10.2)(typescript@4.9.5)

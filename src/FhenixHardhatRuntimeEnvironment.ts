@@ -1,6 +1,7 @@
 import child_process from "child_process";
 import fs from "fs";
 import util from "util";
+import { ethers } from "ethers";
 
 const IMAGE = JSON.parse(
   fs.readFileSync(__dirname + "/../package.json", {
@@ -17,6 +18,7 @@ export class FhenixHardhatRuntimeEnvironment {
   public readonly rpcPort: number;
   public readonly wsPort: number;
   public readonly faucetPort: number;
+  public readonly ethers: ethers.providers.JsonRpcProvider;
 
   public constructor() {
     this.name = `localfhenix-${Date.now()}`;
@@ -32,6 +34,10 @@ export class FhenixHardhatRuntimeEnvironment {
 
     // Add the container to the list of containers to be removed when the process exits
     containers.push(this.name);
+
+    this.ethers = new ethers.providers.JsonRpcProvider(
+      `http://localhost:${this.rpcPort}`,
+    );
   }
 
   public async destroy() {
