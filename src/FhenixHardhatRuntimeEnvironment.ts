@@ -1,7 +1,7 @@
 import child_process from "child_process";
+import { ethers } from "ethers";
 import fs from "fs";
 import util from "util";
-import { ethers } from "ethers";
 
 const IMAGE = JSON.parse(
   fs.readFileSync(__dirname + "/../package.json", {
@@ -35,9 +35,31 @@ export class FhenixHardhatRuntimeEnvironment {
     // Add the container to the list of containers to be removed when the process exits
     containers.push(this.name);
 
-    this.ethers = new ethers.providers.JsonRpcProvider(
-      `http://localhost:${this.rpcPort}`,
+    this.ethers = new ethers.providers.WebSocketProvider(
+      `http://localhost:${this.wsPort}`,
     );
+  }
+
+  public async getFunds(addres: string) {
+    const response = await fetch(
+      `http://localhost:${this.faucetPort}/faucet?address=${addres}`,
+    );
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Failed to get funds from faucet: ${response.status}: ${response.statusText}`,
+      );
+    }
+
+    if (
+      !(await response.json())?.message?.includes(
+        "ETH successfully sent to address",
+      ) === null
+    ) {
+      throw new Error(
+        `Failed to get funds from faucet: ${await response.text()}`,
+      );
+    }
   }
 
   public async destroy() {
