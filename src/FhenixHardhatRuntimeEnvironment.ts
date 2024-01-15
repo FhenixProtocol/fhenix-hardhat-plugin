@@ -30,6 +30,7 @@ export class FhenixHardhatRuntimeEnvironment {
       `docker run -d --rm -p "${this.rpcPort}":8547 -p "${this.wsPort}":8548 -p "${this.faucetPort}":3000 --name "${this.name}" "${IMAGE}"`,
     );
 
+    // Add the container to the list of containers to be removed when the process exits
     containers.push(this.name);
   }
 
