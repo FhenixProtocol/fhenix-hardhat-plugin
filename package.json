@@ -1,9 +1,9 @@
 {
-  "name": "hardhat-ts-plugin-boilerplate",
+  "name": "fhenix-hardhat-plugin",
   "version": "0.0.1",
   "description": "Hardhat TypeScript plugin boilerplate",
   "repository": "github:nomiclabs/hardhat-ts-plugin-boilerplate",
-  "author": "Nomic Labs LLC",
+  "author": "Fhenix Labs",
   "license": "MIT",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -11,15 +11,21 @@
     "ethereum",
     "smart-contracts",
     "hardhat",
-    "hardhat-plugin"
+    "hardhat-plugin",
+    "fhe",
+    "fhenix"
   ],
+  "config": {
+    "image": "ghcr.io/fhenixprotocol/fhenix-node-dev:v0.0.9-standalone"
+  },
   "scripts": {
     "lint:fix": "prettier --write 'src/**/*.{js,ts}' 'test/**/*.{js,ts}' && tslint --fix --config tslint.json --project tsconfig.json",
     "lint": "tslint --config tslint.json --project tsconfig.json",
     "test": "mocha --exit --recursive 'test/**/*.test.ts'",
     "build": "tsc",
     "watch": "tsc -w",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "postinstall": "docker pull %npm_package_config_image%"
   },
   "files": [
     "dist/src/",
