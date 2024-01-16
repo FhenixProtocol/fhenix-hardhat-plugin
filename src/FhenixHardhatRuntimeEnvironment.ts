@@ -1,13 +1,8 @@
 import child_process from "child_process";
 import { ethers } from "ethers";
-import fs from "fs";
 import util from "util";
 
-const IMAGE = JSON.parse(
-  fs.readFileSync(__dirname + "/../package.json", {
-    encoding: "utf-8",
-  }),
-).config.image;
+import { config } from "../package.json";
 
 const exec = util.promisify(child_process.exec);
 
@@ -29,7 +24,7 @@ export class FhenixHardhatRuntimeEnvironment {
     this.faucetPort = randomBetween(1025, 65536);
 
     child_process.execSync(
-      `docker run -d --rm -p "${this.rpcPort}":8547 -p "${this.wsPort}":8548 -p "${this.faucetPort}":3000 --name "${this.name}" "${IMAGE}"`,
+      `docker run -d --rm -p "${this.rpcPort}":8547 -p "${this.wsPort}":8548 -p "${this.faucetPort}":3000 --name "${this.name}" "${config.image}"`,
     );
 
     // Add the container to the list of containers to be removed when the process exits

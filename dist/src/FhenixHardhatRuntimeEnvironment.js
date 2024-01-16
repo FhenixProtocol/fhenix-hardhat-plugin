@@ -6,11 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FhenixHardhatRuntimeEnvironment = void 0;
 const child_process_1 = __importDefault(require("child_process"));
 const ethers_1 = require("ethers");
-const fs_1 = __importDefault(require("fs"));
 const util_1 = __importDefault(require("util"));
-const IMAGE = JSON.parse(fs_1.default.readFileSync(__dirname + "/../package.json", {
-    encoding: "utf-8",
-})).config.image;
+const package_json_1 = require("../package.json");
 const exec = util_1.default.promisify(child_process_1.default.exec);
 const containers = [];
 class FhenixHardhatRuntimeEnvironment {
@@ -20,7 +17,7 @@ class FhenixHardhatRuntimeEnvironment {
         this.rpcPort = randomBetween(1025, 65536);
         this.wsPort = randomBetween(1025, 65536);
         this.faucetPort = randomBetween(1025, 65536);
-        child_process_1.default.execSync(`docker run -d --rm -p "${this.rpcPort}":8547 -p "${this.wsPort}":8548 -p "${this.faucetPort}":3000 --name "${this.name}" "${IMAGE}"`);
+        child_process_1.default.execSync(`docker run -d --rm -p "${this.rpcPort}":8547 -p "${this.wsPort}":8548 -p "${this.faucetPort}":3000 --name "${this.name}" "${package_json_1.config.image}"`);
         // Add the container to the list of containers to be removed when the process exits
         containers.push(this.name);
         this.ethers = new ethers_1.ethers.providers.WebSocketProvider(`http://localhost:${this.wsPort}`);
