@@ -1,6 +1,7 @@
 import child_process from "child_process";
-import { ethers } from "ethers";
+import { ethers, JsonRpcProvider } from "ethers";
 import util from "util";
+import { FhenixClient } from "fhenixjs";
 
 import { config } from "../package.json";
 
@@ -9,14 +10,17 @@ const exec = util.promisify(child_process.exec);
 const containers: string[] = [];
 
 export class FhenixHardhatRuntimeEnvironment {
-  public readonly name: string;
+  public readonly dockerName: string;
+
   public readonly rpcPort: number;
   public readonly wsPort: number;
   public readonly faucetPort: number;
-  public readonly ethers: ethers.providers.JsonRpcProvider;
+
+  public readonly ethers: JsonRpcProvider;
+  public readonly fhenixjs: Promise<FhenixClient>;
 
   public constructor() {
-    this.name = `localfhenix-${Date.now()}`;
+    this.dockerName = `localfhenix-${Date.now()}`;
 
     // TODO check if ports are available
     this.rpcPort = randomBetween(1025, 65536);
@@ -24,15 +28,14 @@ export class FhenixHardhatRuntimeEnvironment {
     this.faucetPort = randomBetween(1025, 65536);
 
     child_process.execSync(
-      `docker run -d --rm -p "${this.rpcPort}":8547 -p "${this.wsPort}":8548 -p "${this.faucetPort}":3000 --name "${this.name}" "${config.image}"`,
+      `docker run -d --rm -p "${this.rpcPort}":8547 -p "${this.wsPort}":8548 -p "${this.faucetPort}":3000 --name "${this.dockerName}" "${config.image}"`,
     );
 
     // Add the container to the list of containers to be removed when the process exits
-    containers.push(this.name);
+    containers.push(this.dockerName);
 
-    this.ethers = new ethers.providers.WebSocketProvider(
-      `http://localhost:${this.wsPort}`,
-    );
+    this.ethers = new JsonRpcProvider(`http://localhost:${this.rpcPort}`);
+    this.fhenixjs = FhenixClient.Create({ provider: this.ethers });
   }
 
   public async getFunds(addres: string) {
@@ -58,7 +61,7 @@ export class FhenixHardhatRuntimeEnvironment {
   }
 
   public async destroy() {
-    await exec(`docker rm -f "${this.name}"`);
+    await exec(`docker rm -f "${this.dockerName}"`);
   }
 
   public sayHello() {

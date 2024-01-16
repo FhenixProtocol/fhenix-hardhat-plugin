@@ -7,20 +7,22 @@ exports.FhenixHardhatRuntimeEnvironment = void 0;
 const child_process_1 = __importDefault(require("child_process"));
 const ethers_1 = require("ethers");
 const util_1 = __importDefault(require("util"));
+const fhenixjs_1 = require("fhenixjs");
 const package_json_1 = require("../package.json");
 const exec = util_1.default.promisify(child_process_1.default.exec);
 const containers = [];
 class FhenixHardhatRuntimeEnvironment {
     constructor() {
-        this.name = `localfhenix-${Date.now()}`;
+        this.dockerName = `localfhenix-${Date.now()}`;
         // TODO check if ports are available
         this.rpcPort = randomBetween(1025, 65536);
         this.wsPort = randomBetween(1025, 65536);
         this.faucetPort = randomBetween(1025, 65536);
-        child_process_1.default.execSync(`docker run -d --rm -p "${this.rpcPort}":8547 -p "${this.wsPort}":8548 -p "${this.faucetPort}":3000 --name "${this.name}" "${package_json_1.config.image}"`);
+        child_process_1.default.execSync(`docker run -d --rm -p "${this.rpcPort}":8547 -p "${this.wsPort}":8548 -p "${this.faucetPort}":3000 --name "${this.dockerName}" "${package_json_1.config.image}"`);
         // Add the container to the list of containers to be removed when the process exits
-        containers.push(this.name);
-        this.ethers = new ethers_1.ethers.providers.WebSocketProvider(`http://localhost:${this.wsPort}`);
+        containers.push(this.dockerName);
+        this.ethers = new ethers_1.JsonRpcProvider(`http://localhost:${this.rpcPort}`);
+        this.fhenixjs = fhenixjs_1.FhenixClient.Create({ provider: this.ethers });
     }
     async getFunds(addres) {
         const response = await fetch(`http://localhost:${this.faucetPort}/faucet?address=${addres}`);
@@ -32,7 +34,7 @@ class FhenixHardhatRuntimeEnvironment {
         }
     }
     async destroy() {
-        await exec(`docker rm -f "${this.name}"`);
+        await exec(`docker rm -f "${this.dockerName}"`);
     }
     sayHello() {
         return "hello";
