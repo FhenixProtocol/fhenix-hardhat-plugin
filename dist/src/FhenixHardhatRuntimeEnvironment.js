@@ -46,6 +46,9 @@ function randomBetween(min, max) {
 // exitHandler blocks, so that the process won't exit before the containers are removed
 // note: `docker rm -f` gracefully skips non-existing containers
 function exitHandler() {
+    if (containers.length === 0) {
+        return;
+    }
     child_process_1.default.execSync(`docker rm -f ${containers.map((name) => `"${name}"`).join(" ")}`);
 }
 process.on("exit", exitHandler);
