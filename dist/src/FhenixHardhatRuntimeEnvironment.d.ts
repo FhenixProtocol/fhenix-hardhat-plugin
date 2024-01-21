@@ -6,7 +6,7 @@ type FhenixHardhatRuntimeEnvironmentConfig = {
 };
 export declare class FhenixHardhatRuntimeEnvironment {
     config: FhenixHardhatRuntimeEnvironmentConfig;
-    readonly fhenixjs: Promise<FhenixClient>;
+    readonly fhenixjs: FhenixClient;
     constructor(config?: FhenixHardhatRuntimeEnvironmentConfig);
     getFunds(addres: string): Promise<void>;
     sayHello(): string;

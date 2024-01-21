@@ -11,7 +11,7 @@ type FhenixHardhatRuntimeEnvironmentConfig = {
 };
 
 export class FhenixHardhatRuntimeEnvironment {
-  public readonly fhenixjs: Promise<FhenixClient>;
+  public readonly fhenixjs: FhenixClient;
 
   public constructor(
     public config: FhenixHardhatRuntimeEnvironmentConfig = {
@@ -24,7 +24,7 @@ export class FhenixHardhatRuntimeEnvironment {
     this.config.wsPort = this.config.wsPort ?? 8545;
     this.config.faucetPort = this.config.faucetPort ?? 8545;
 
-    this.fhenixjs = FhenixClient.Create({
+    this.fhenixjs = new FhenixClient({
       provider: new WebSocketProvider(`ws://localhost:${this.config.wsPort}`),
     });
   }

@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "ethers": "latest",
-    "fhenixjs": "^0.0.4"
+    "fhenixjs": "github:FhenixProtocol/fhenix.js#5104cf3"
   },
   "peerDependencies": {
     "hardhat": "^2.0.0"
