@@ -48,7 +48,7 @@ export class FhenixHardhatRuntimeEnvironment {
       )
     ) {
       throw new Error(
-        `Failed to get funds from faucet: ${await response.data}`,
+        `Failed to get funds from faucet: ${JSON.stringify(response.data)}`,
       );
     }
   }
