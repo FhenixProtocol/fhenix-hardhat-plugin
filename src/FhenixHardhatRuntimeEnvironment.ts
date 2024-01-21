@@ -1,7 +1,7 @@
 import child_process from "child_process";
-import { ethers, JsonRpcProvider } from "ethers";
-import util from "util";
+import { JsonRpcProvider } from "ethers";
 import { FhenixClient } from "fhenixjs";
+import util from "util";
 
 import { config } from "../package.json";
 
