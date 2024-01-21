@@ -26,8 +26,7 @@ class FhenixHardhatRuntimeEnvironment {
         if (response.status !== 200) {
             throw new Error(`Failed to get funds from faucet: ${response.status}: ${response.statusText}`);
         }
-        if (!(response.data?.message?.includes("ETH successfully sent to address") ===
-            null)) {
+        if (!response.data?.message?.includes("ETH successfully sent to address")) {
             throw new Error(`Failed to get funds from faucet: ${JSON.stringify(response.data)}`);
         }
     }
