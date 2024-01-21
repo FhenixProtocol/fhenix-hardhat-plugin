@@ -1,3 +1,4 @@
+import axios from "axios";
 import { WebSocketProvider } from "ethers";
 import { FhenixClient } from "fhenixjs";
 
@@ -30,7 +31,7 @@ export class FhenixHardhatRuntimeEnvironment {
   }
 
   public async getFunds(addres: string) {
-    const response = await fetch(
+    const response = await axios.get(
       `http://localhost:${this.config.faucetPort}/faucet?address=${addres}`,
     );
 
@@ -41,12 +42,13 @@ export class FhenixHardhatRuntimeEnvironment {
     }
 
     if (
-      !(await response.json())?.message?.includes(
-        "ETH successfully sent to address",
-      ) === null
+      !(
+        response.data?.message?.includes("ETH successfully sent to address") ===
+        null
+      )
     ) {
       throw new Error(
-        `Failed to get funds from faucet: ${await response.text()}`,
+        `Failed to get funds from faucet: ${await response.data}`,
       );
     }
   }
