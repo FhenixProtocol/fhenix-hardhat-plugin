@@ -25,7 +25,7 @@ export class FhenixHardhatRuntimeEnvironment {
     this.config.faucetPort = this.config.faucetPort ?? 8545;
 
     this.fhenixjs = FhenixClient.Create({
-      provider: new WebSocketProvider(`http://localhost:${this.config.wsPort}`),
+      provider: new WebSocketProvider(`ws://localhost:${this.config.wsPort}`),
     });
   }
 

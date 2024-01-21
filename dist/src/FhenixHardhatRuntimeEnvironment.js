@@ -14,7 +14,7 @@ class FhenixHardhatRuntimeEnvironment {
         this.config.wsPort = this.config.wsPort ?? 8545;
         this.config.faucetPort = this.config.faucetPort ?? 8545;
         this.fhenixjs = fhenixjs_1.FhenixClient.Create({
-            provider: new ethers_1.WebSocketProvider(`http://localhost:${this.config.wsPort}`),
+            provider: new ethers_1.WebSocketProvider(`ws://localhost:${this.config.wsPort}`),
         });
     }
     async getFunds(addres) {
