@@ -1,22 +1,37 @@
 import { WebSocketProvider } from "ethers";
 import { FhenixClient } from "fhenixjs";
 
+type FhenixHardhatRuntimeEnvironmentConfig = {
+  /// rpcPort defaults to 8545
+  rpcPort?: number;
+  /// wsPort defaults to 8548
+  wsPort?: number;
+  /// faucetPort defaults to 3000
+  faucetPort?: number;
+};
+
 export class FhenixHardhatRuntimeEnvironment {
   public readonly fhenixjs: Promise<FhenixClient>;
 
   public constructor(
-    public rpcPort: number = 8545,
-    public wsPort: number = 8548,
-    public faucetPort: number = 3000,
+    public config: FhenixHardhatRuntimeEnvironmentConfig = {
+      rpcPort: 8545,
+      wsPort: 8548,
+      faucetPort: 3000,
+    },
   ) {
+    this.config.rpcPort = this.config.rpcPort ?? 8545;
+    this.config.wsPort = this.config.wsPort ?? 8545;
+    this.config.faucetPort = this.config.faucetPort ?? 8545;
+
     this.fhenixjs = FhenixClient.Create({
-      provider: new WebSocketProvider(`http://localhost:${this.wsPort}`),
+      provider: new WebSocketProvider(`http://localhost:${this.config.wsPort}`),
     });
   }
 
   public async getFunds(addres: string) {
     const response = await fetch(
-      `http://localhost:${this.faucetPort}/faucet?address=${addres}`,
+      `http://localhost:${this.config.faucetPort}/faucet?address=${addres}`,
     );
 
     if (response.status !== 200) {
