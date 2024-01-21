@@ -1,14 +1,7 @@
-import child_process from "child_process";
-import { JsonRpcProvider } from "ethers";
+import { WebSocketProvider } from "ethers";
 import { FhenixClient } from "fhenixjs";
-import util from "util";
-
-const exec = util.promisify(child_process.exec);
-
-const containers: string[] = [];
 
 export class FhenixHardhatRuntimeEnvironment {
-  public readonly ethers: JsonRpcProvider;
   public readonly fhenixjs: Promise<FhenixClient>;
 
   public constructor(
@@ -16,8 +9,9 @@ export class FhenixHardhatRuntimeEnvironment {
     public wsPort: number = 8548,
     public faucetPort: number = 3000,
   ) {
-    this.ethers = new JsonRpcProvider(`http://localhost:${this.rpcPort}`);
-    this.fhenixjs = FhenixClient.Create({ provider: this.ethers });
+    this.fhenixjs = FhenixClient.Create({
+      provider: new WebSocketProvider(`http://localhost:${this.wsPort}`),
+    });
   }
 
   public async getFunds(addres: string) {
