@@ -21,7 +21,10 @@ interface Container {
 }
 
 export class FhenixHardhatRuntimeEnvironment {
+  /// fhenixjs is a FhenixClient connected to the localfhenix docker container
+  /// it has an easy to use API for encrypting inputs and decrypting outputs
   public readonly fhenixjs: FhenixClient;
+  /// ready is a promise that resolves when the localfhenix docker container is ready
   public readonly ready: Promise<void>;
 
   public constructor(
