@@ -25,7 +25,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "prepublishOnly": "npm run build",
-    "postinstall": "docker pull $npm_package_config_image"
+    "postinstall": "docker rm -f localfhenix && docker pull $npm_package_config_image"
   },
   "files": [
     "dist/src/",
