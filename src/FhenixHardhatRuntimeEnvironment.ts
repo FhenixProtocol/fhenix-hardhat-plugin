@@ -22,8 +22,8 @@ export class FhenixHardhatRuntimeEnvironment {
     },
   ) {
     this.config.rpcPort = this.config.rpcPort ?? 8545;
-    this.config.wsPort = this.config.wsPort ?? 8545;
-    this.config.faucetPort = this.config.faucetPort ?? 8545;
+    this.config.wsPort = this.config.wsPort ?? 8548;
+    this.config.faucetPort = this.config.faucetPort ?? 3000;
 
     this.fhenixjs = new FhenixClient({
       provider: new WebSocketProvider(`ws://localhost:${this.config.wsPort}`),
