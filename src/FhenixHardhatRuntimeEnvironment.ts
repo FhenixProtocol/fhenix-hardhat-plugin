@@ -55,6 +55,8 @@ export class FhenixHardhatRuntimeEnvironment {
         return reject(error);
       }
 
+      console.log("stdout:", `'${stdout}'`);
+
       const [existingLocalfhenix]: Container[] = stdout
         .split("\n")
         .map((line) => JSON.parse(line))

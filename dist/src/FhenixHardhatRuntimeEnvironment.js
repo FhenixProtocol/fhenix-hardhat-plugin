@@ -32,6 +32,7 @@ class FhenixHardhatRuntimeEnvironment {
             catch (error) {
                 return reject(error);
             }
+            console.log("stdout:", `'${stdout}'`);
             const [existingLocalfhenix] = stdout
                 .split("\n")
                 .map((line) => JSON.parse(line))
