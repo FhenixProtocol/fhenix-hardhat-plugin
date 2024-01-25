@@ -35,7 +35,14 @@ class FhenixHardhatRuntimeEnvironment {
             console.log("stdout:", `'${stdout}'`);
             const [existingLocalfhenix] = stdout
                 .split("\n")
-                .map((line) => JSON.parse(line))
+                .map((line) => {
+                try {
+                    return JSON.parse(line);
+                }
+                catch (error) {
+                    return {}; // avoid null pointer exception on container.name
+                }
+            })
                 .filter((container) => container.name === "localfhenix");
             const run = () => {
                 try {
