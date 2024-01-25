@@ -47,6 +47,13 @@ class FhenixHardhatRuntimeEnvironment {
             const run = () => {
                 try {
                     child_process_1.default.execSync(`docker rm -f localfhenix`);
+                }
+                catch (error) {
+                    if (!error?.message?.includes("No such container")) {
+                        return reject(error);
+                    }
+                }
+                try {
                     child_process_1.default.execSync(`docker run -d --rm -p "${this.config.rpcPort}":8547 -p "${this.config.wsPort}":8548 -p "${this.config.faucetPort}":3000 --name localfhenix "${package_json_1.config.image}"`);
                 }
                 catch (error) {
