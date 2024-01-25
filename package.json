@@ -16,7 +16,7 @@
     "fhenix"
   ],
   "config": {
-    "image": "ghcr.io/fhenixprotocol/fhenix-node-dev:v0.0.9-standalone"
+    "image": "ghcr.io/fhenixprotocol/localfhenix:v0.1.0-beta2"
   },
   "scripts": {
     "lint:fix": "prettier --write 'src/**/*.{js,ts}' 'test/**/*.{js,ts}' && tslint --fix --config tslint.json --project tsconfig.json",
