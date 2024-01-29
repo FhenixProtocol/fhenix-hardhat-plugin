@@ -28,18 +28,18 @@ export class FhenixHardhatRuntimeEnvironment {
     public config: FhenixHardhatRuntimeEnvironmentConfig = {
       rpcPort: 8545,
       wsPort: 8548,
-      faucetPort: 3000,
+      faucetPort: 42000,
     },
   ) {
     this.config.rpcPort = this.config.rpcPort ?? 8545;
     this.config.wsPort = this.config.wsPort ?? 8548;
-    this.config.faucetPort = this.config.faucetPort ?? 3000;
+    this.config.faucetPort = this.config.faucetPort ?? 42000;
 
     // if we already have a provider here we can initialize the client
     if (hre?.network !== undefined && hre.network.provider) {
       this.provider = hre.network.provider;
       this.client = new FhenixClient({
-        ignoreErrors: false,
+        ignoreErrors: true,
         provider: hre.network.provider,
       });
     } else {

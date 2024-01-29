@@ -25,11 +25,11 @@ describe("Test Fhenix Plugin", function () {
       let err: Error | EncryptedUint8;
       try {
         err = await this.hre.fhenixjs.client.encrypt_uint8(1);
-      } catch (e) {
+      } catch (e: any) {
         err = e;
       }
       expect(err).to.be.an("error");
-      expect(err.toString()).to.include("got malformed public key");
+      expect(err.toString()).to.include("initializing fhenixjs");
     });
   });
 

@@ -1,4 +1,4 @@
-import { TASK_FHENIX_DOCKER_STOP, TASK_FHENIX_NODE } from "../src/const";
+import { LOCALFHENIX_CONTAINER_NAME, TASK_FHENIX_DOCKER_STOP, TASK_FHENIX_NODE } from "../src/const";
 import { isRunningContainer, stopLocalFhenix } from "../src/docker";
 
 import { useEnvironment } from "./helpers";
@@ -27,14 +27,14 @@ describe("Fhenix Docker Tests", function () {
 
       await _delay(3000);
 
-      if (!isRunningContainer("localfhenix")) {
+      if (!isRunningContainer(LOCALFHENIX_CONTAINER_NAME)) {
         throw new Error("Server did not start");
       }
 
       // Wait for the server to stop
       await this.hre.run(TASK_FHENIX_DOCKER_STOP);
 
-      if (isRunningContainer("localfhenix")) {
+      if (isRunningContainer(LOCALFHENIX_CONTAINER_NAME)) {
         throw new Error("Server did not stop");
       }
     });

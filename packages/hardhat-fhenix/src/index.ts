@@ -1,6 +1,4 @@
-import { FhenixClient } from "fhenixjs";
-import { TASK_NODE_SERVER_READY } from "hardhat/builtin-tasks/task-names";
-import { extendConfig, extendEnvironment, subtask } from "hardhat/config";
+import { extendConfig, extendEnvironment } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
 
 import { FhenixHardhatRuntimeEnvironment } from "./FhenixHardhatRuntimeEnvironment";
