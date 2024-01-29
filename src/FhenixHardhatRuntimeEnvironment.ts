@@ -1,7 +1,12 @@
 import axios from "axios";
 import child_process from "child_process";
 import { JsonRpcProvider } from "ethers";
-import { FhenixClient } from "fhenixjs";
+import {
+  FhenixClient,
+  Permit,
+  SupportedProvider,
+  generatePermit,
+} from "fhenixjs";
 
 import { config as packageConfig } from "../package.json";
 
@@ -22,6 +27,8 @@ interface Container {
 
 /// NOTE: startLocalFhenix() must be called once before starting to create FhenixHardhatRuntimeEnvironment instances
 export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
+  private readonly provider: SupportedProvider;
+
   public constructor(
     private config: FhenixHardhatRuntimeEnvironmentConfig = {
       rpcPort: 8545,
@@ -29,11 +36,12 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
       faucetPort: 3000,
     },
   ) {
-    super({
-      provider: new JsonRpcProvider(
-        `http://localhost:${config.rpcPort ?? 8545}`,
-      ),
-    });
+    const provider = new JsonRpcProvider(
+      `http://localhost:${config.rpcPort ?? 8545}`,
+    );
+    super({ provider });
+
+    this.provider = provider;
 
     this.config.rpcPort = config.rpcPort ?? 8545;
     this.config.wsPort = config.wsPort ?? 8548;
@@ -154,6 +162,10 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
         `Failed to get funds from faucet: ${JSON.stringify(response.data)}`,
       );
     }
+  }
+
+  public async generatePermit(contract: string): Promise<Permit> {
+    return generatePermit(contract, this.provider);
   }
 
   public sayHello() {

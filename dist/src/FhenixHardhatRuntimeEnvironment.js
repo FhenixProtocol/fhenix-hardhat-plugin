@@ -16,10 +16,10 @@ class FhenixHardhatRuntimeEnvironment extends fhenixjs_1.FhenixClient {
         wsPort: 8548,
         faucetPort: 3000,
     }) {
-        super({
-            provider: new ethers_1.JsonRpcProvider(`http://localhost:${config.rpcPort ?? 8545}`),
-        });
+        const provider = new ethers_1.JsonRpcProvider(`http://localhost:${config.rpcPort ?? 8545}`);
+        super({ provider });
         this.config = config;
+        this.provider = provider;
         this.config.rpcPort = config.rpcPort ?? 8545;
         this.config.wsPort = config.wsPort ?? 8548;
         this.config.faucetPort = config.faucetPort ?? 3000;
@@ -110,6 +110,9 @@ class FhenixHardhatRuntimeEnvironment extends fhenixjs_1.FhenixClient {
         if (!response.data?.message?.includes("ETH successfully sent to address")) {
             throw new Error(`Failed to get funds from faucet: ${JSON.stringify(response.data)}`);
         }
+    }
+    async generatePermit(contract) {
+        return (0, fhenixjs_1.generatePermit)(contract, this.provider);
     }
     sayHello() {
         return "hello";
