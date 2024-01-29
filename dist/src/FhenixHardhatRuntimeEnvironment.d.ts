@@ -4,9 +4,8 @@ interface FhenixHardhatRuntimeEnvironmentConfig {
     wsPort?: number;
     faucetPort?: number;
 }
-export declare class FhenixHardhatRuntimeEnvironment {
+export declare class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     private config;
-    readonly fhenixjs: FhenixClient;
     constructor(config?: FhenixHardhatRuntimeEnvironmentConfig);
     static startLocalFhenix(config?: FhenixHardhatRuntimeEnvironmentConfig): Promise<void>;
     static isLocalFhenixRunning(config?: FhenixHardhatRuntimeEnvironmentConfig): boolean;

@@ -10,19 +10,19 @@ const ethers_1 = require("ethers");
 const fhenixjs_1 = require("fhenixjs");
 const package_json_1 = require("../package.json");
 /// NOTE: startLocalFhenix() must be called once before starting to create FhenixHardhatRuntimeEnvironment instances
-class FhenixHardhatRuntimeEnvironment {
+class FhenixHardhatRuntimeEnvironment extends fhenixjs_1.FhenixClient {
     constructor(config = {
         rpcPort: 8545,
         wsPort: 8548,
         faucetPort: 3000,
     }) {
-        this.config = config;
-        this.config.rpcPort = this.config.rpcPort ?? 8545;
-        this.config.wsPort = this.config.wsPort ?? 8548;
-        this.config.faucetPort = this.config.faucetPort ?? 3000;
-        this.fhenixjs = new fhenixjs_1.FhenixClient({
-            provider: new ethers_1.JsonRpcProvider(`http://localhost:${this.config.rpcPort}`),
+        super({
+            provider: new ethers_1.JsonRpcProvider(`http://localhost:${config.rpcPort ?? 8545}`),
         });
+        this.config = config;
+        this.config.rpcPort = config.rpcPort ?? 8545;
+        this.config.wsPort = config.wsPort ?? 8548;
+        this.config.faucetPort = config.faucetPort ?? 3000;
     }
     /// startLocalFhenix() must be called once before starting to create FhenixHardhatRuntimeEnvironment instances
     static async startLocalFhenix(config = {

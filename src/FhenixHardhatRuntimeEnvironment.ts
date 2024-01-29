@@ -21,11 +21,7 @@ interface Container {
 }
 
 /// NOTE: startLocalFhenix() must be called once before starting to create FhenixHardhatRuntimeEnvironment instances
-export class FhenixHardhatRuntimeEnvironment {
-  /// fhenixjs is a FhenixClient connected to the localfhenix docker container
-  /// it has an easy to use API for encrypting inputs and decrypting outputs
-  public readonly fhenixjs: FhenixClient;
-
+export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
   public constructor(
     private config: FhenixHardhatRuntimeEnvironmentConfig = {
       rpcPort: 8545,
@@ -33,13 +29,15 @@ export class FhenixHardhatRuntimeEnvironment {
       faucetPort: 3000,
     },
   ) {
-    this.config.rpcPort = this.config.rpcPort ?? 8545;
-    this.config.wsPort = this.config.wsPort ?? 8548;
-    this.config.faucetPort = this.config.faucetPort ?? 3000;
-
-    this.fhenixjs = new FhenixClient({
-      provider: new JsonRpcProvider(`http://localhost:${this.config.rpcPort}`),
+    super({
+      provider: new JsonRpcProvider(
+        `http://localhost:${config.rpcPort ?? 8545}`,
+      ),
     });
+
+    this.config.rpcPort = config.rpcPort ?? 8545;
+    this.config.wsPort = config.wsPort ?? 8548;
+    this.config.faucetPort = config.faucetPort ?? 3000;
   }
 
   /// startLocalFhenix() must be called once before starting to create FhenixHardhatRuntimeEnvironment instances
