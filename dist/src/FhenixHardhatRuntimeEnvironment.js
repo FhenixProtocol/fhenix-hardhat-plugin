@@ -112,7 +112,33 @@ class FhenixHardhatRuntimeEnvironment extends fhenixjs_1.FhenixClient {
         }
     }
     async generatePermit(contract) {
-        return (0, fhenixjs_1.generatePermit)(contract, this.provider);
+        const pemit = await (0, fhenixjs_1.generatePermit)(contract, this.provider);
+        this.storePermit(pemit);
+        return pemit;
+    }
+    /**
+     * Encrypts a Uint8 value using the stored public key.
+     * @param {number} value - The Uint8 value to encrypt.
+     * @returns {EncryptedUint8} - The encrypted value serialized as EncryptedUint8. Use the .data property to access the Uint8Array.
+     */
+    async encrypt_uint8(value) {
+        return this.encrypt(value, fhenixjs_1.EncryptionTypes.uint8);
+    }
+    /**
+     * Encrypts a Uint16 value using the stored public key.
+     * @param {number} value - The Uint16 value to encrypt.
+     * @returns {EncryptedUint16} - The encrypted value serialized as EncryptedUint16. Use the .data property to access the Uint8Array.
+     */
+    async encrypt_uint16(value) {
+        return this.encrypt(value, fhenixjs_1.EncryptionTypes.uint16);
+    }
+    /**
+     * Encrypts a Uint32 value using the stored public key.
+     * @param {number} value - The Uint32 value to encrypt.
+     * @returns {EncryptedUint32} - The encrypted value serialized as EncryptedUint32. Use the .data property to access the Uint8Array.
+     */
+    async encrypt_uint32(value) {
+        return this.encrypt(value, fhenixjs_1.EncryptionTypes.uint32);
     }
     sayHello() {
         return "hello";

@@ -2,6 +2,10 @@ import axios from "axios";
 import child_process from "child_process";
 import { JsonRpcProvider } from "ethers";
 import {
+  EncryptedUint16,
+  EncryptedUint32,
+  EncryptedUint8,
+  EncryptionTypes,
   FhenixClient,
   Permit,
   SupportedProvider,
@@ -165,7 +169,36 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
   }
 
   public async generatePermit(contract: string): Promise<Permit> {
-    return generatePermit(contract, this.provider);
+    const pemit = await generatePermit(contract, this.provider);
+    this.storePermit(pemit);
+    return pemit;
+  }
+
+  /**
+   * Encrypts a Uint8 value using the stored public key.
+   * @param {number} value - The Uint8 value to encrypt.
+   * @returns {EncryptedUint8} - The encrypted value serialized as EncryptedUint8. Use the .data property to access the Uint8Array.
+   */
+  async encrypt_uint8(value: number): Promise<EncryptedUint8> {
+    return this.encrypt(value, EncryptionTypes.uint8);
+  }
+
+  /**
+   * Encrypts a Uint16 value using the stored public key.
+   * @param {number} value - The Uint16 value to encrypt.
+   * @returns {EncryptedUint16} - The encrypted value serialized as EncryptedUint16. Use the .data property to access the Uint8Array.
+   */
+  async encrypt_uint16(value: number): Promise<EncryptedUint16> {
+    return this.encrypt(value, EncryptionTypes.uint16);
+  }
+
+  /**
+   * Encrypts a Uint32 value using the stored public key.
+   * @param {number} value - The Uint32 value to encrypt.
+   * @returns {EncryptedUint32} - The encrypted value serialized as EncryptedUint32. Use the .data property to access the Uint8Array.
+   */
+  async encrypt_uint32(value: number): Promise<EncryptedUint32> {
+    return this.encrypt(value, EncryptionTypes.uint32);
   }
 
   public sayHello() {
