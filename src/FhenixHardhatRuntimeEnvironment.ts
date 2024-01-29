@@ -20,15 +20,14 @@ interface Container {
   image: string;
 }
 
+/// NOTE: startLocalFhenix() must be called once before starting to create FhenixHardhatRuntimeEnvironment instances
 export class FhenixHardhatRuntimeEnvironment {
   /// fhenixjs is a FhenixClient connected to the localfhenix docker container
   /// it has an easy to use API for encrypting inputs and decrypting outputs
   public readonly fhenixjs: FhenixClient;
-  /// ready is a promise that resolves when the localfhenix docker container is ready
-  public readonly ready: Promise<void>;
 
   public constructor(
-    public config: FhenixHardhatRuntimeEnvironmentConfig = {
+    private config: FhenixHardhatRuntimeEnvironmentConfig = {
       rpcPort: 8545,
       wsPort: 8548,
       faucetPort: 3000,
@@ -41,87 +40,104 @@ export class FhenixHardhatRuntimeEnvironment {
     this.fhenixjs = new FhenixClient({
       provider: new JsonRpcProvider(`http://localhost:${this.config.rpcPort}`),
     });
+  }
 
-    this.ready = new Promise((resolve, reject) => {
-      let stdout: string;
+  /// startLocalFhenix() must be called once before starting to create FhenixHardhatRuntimeEnvironment instances
+  public static async startLocalFhenix(
+    config: FhenixHardhatRuntimeEnvironmentConfig = {
+      rpcPort: 8545,
+      wsPort: 8548,
+      faucetPort: 3000,
+    },
+  ) {
+    config.rpcPort = config.rpcPort ?? 8545;
+    config.wsPort = config.wsPort ?? 8548;
+    config.faucetPort = config.faucetPort ?? 3000;
+
+    if (FhenixHardhatRuntimeEnvironment.isLocalFhenixRunning(config)) {
+      return;
+    } else {
+      try {
+        child_process.execSync(`docker rm -f localfhenix`);
+      } catch (error) {
+        if (!(error as Error)?.message?.includes("No such container")) {
+          throw error;
+        }
+      }
 
       try {
-        stdout = child_process
-          .execSync(
-            `docker ps -a --format '{"name": "{{ .Names }}", "ports": "{{ .Ports }}", "image": "{{ .Image }}"}'`,
-          )
-          .toString();
+        child_process.execSync(
+          `docker run -d --rm -p "${config.rpcPort}":8547 -p "${config.wsPort}":8548 -p "${config.faucetPort}":3000 --name localfhenix "${packageConfig.image}"`,
+        );
       } catch (error) {
-        return reject(error);
+        throw error;
       }
+    }
+  }
 
-      const [existingLocalfhenix]: Container[] = stdout
-        .split("\n")
-        .map((line) => {
-          try {
-            return JSON.parse(line);
-          } catch (error) {
-            return {}; // avoid null pointer exception on container.name
-          }
-        })
-        .filter((container: Container) => container.name === "localfhenix");
+  public static isLocalFhenixRunning(
+    config: FhenixHardhatRuntimeEnvironmentConfig = {
+      rpcPort: 8545,
+      wsPort: 8548,
+      faucetPort: 3000,
+    },
+  ): boolean {
+    config.rpcPort = config.rpcPort ?? 8545;
+    config.wsPort = config.wsPort ?? 8548;
+    config.faucetPort = config.faucetPort ?? 3000;
 
-      const run = () => {
+    let stdout: string;
+
+    try {
+      stdout = child_process
+        .execSync(
+          `docker ps -a --format '{"name": "{{ .Names }}", "ports": "{{ .Ports }}", "image": "{{ .Image }}"}'`,
+        )
+        .toString();
+    } catch (error) {
+      throw error;
+    }
+
+    const [existingLocalfhenix]: Container[] = stdout
+      .split("\n")
+      .map((line) => {
         try {
-          child_process.execSync(`docker rm -f localfhenix`);
+          return JSON.parse(line);
         } catch (error) {
-          if (!(error as Error)?.message?.includes("No such container")) {
-            return reject(error);
-          }
+          return {}; // avoid null pointer exception on container.name
         }
+      })
+      .filter((container: Container) => container.name === "localfhenix");
 
-        try {
-          child_process.execSync(
-            `docker run -d --rm -p "${this.config.rpcPort}":8547 -p "${this.config.wsPort}":8548 -p "${this.config.faucetPort}":3000 --name localfhenix "${packageConfig.image}"`,
-          );
-        } catch (error) {
-          return reject(error);
-        }
-      };
+    if (!existingLocalfhenix) {
+      return false;
+    }
 
-      if (!existingLocalfhenix) {
-        run();
-        return resolve();
-      }
+    if (existingLocalfhenix.image !== packageConfig.image) {
+      return false;
+    }
 
-      if (existingLocalfhenix.image !== packageConfig.image) {
-        run();
-        return resolve();
-      }
+    const portMappings = Array.from(
+      existingLocalfhenix.ports.matchAll(/0\.0\.0\.0:\d+->\d+\/tcp/g),
+    ).map((match) => match[0]);
 
-      const portMappings = Array.from(
-        existingLocalfhenix.ports.matchAll(/0\.0\.0\.0:\d+->\d+\/tcp/g),
-      ).map((match) => match[0]);
+    if (portMappings.length !== 3) {
+      return false;
+    }
 
-      if (portMappings.length !== 3) {
-        run();
-        return resolve();
-      }
+    if (!portMappings.includes(`0.0.0.0:${config.faucetPort}->3000/tcp`)) {
+      return false;
+    }
 
-      if (
-        !portMappings.includes(`0.0.0.0:${this.config.faucetPort}->3000/tcp`)
-      ) {
-        run();
-        return resolve();
-      }
+    if (!portMappings.includes(`0.0.0.0:${config.rpcPort}->8547/tcp`)) {
+      return false;
+    }
 
-      if (!portMappings.includes(`0.0.0.0:${this.config.rpcPort}->8547/tcp`)) {
-        run();
-        return resolve();
-      }
+    if (!portMappings.includes(`0.0.0.0:${config.wsPort}->8548/tcp`)) {
+      return false;
+    }
 
-      if (!portMappings.includes(`0.0.0.0:${this.config.wsPort}->8548/tcp`)) {
-        run();
-        return resolve();
-      }
-
-      resolve();
-    });
+    return true;
   }
 
   public async getFunds(addres: string) {

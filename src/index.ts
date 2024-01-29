@@ -39,5 +39,11 @@ import "./type-extensions";
 // );
 
 extendEnvironment((hre) => {
+  FhenixHardhatRuntimeEnvironment.startLocalFhenix();
+
+  while (!FhenixHardhatRuntimeEnvironment.isLocalFhenixRunning()) {
+    // a bit inefficient, but it's fine for now
+  }
+
   hre.fhenix = new FhenixHardhatRuntimeEnvironment();
 });

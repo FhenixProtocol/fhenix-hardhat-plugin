@@ -36,6 +36,10 @@ require("./type-extensions");
 //   },
 // );
 (0, config_1.extendEnvironment)((hre) => {
+    FhenixHardhatRuntimeEnvironment_1.FhenixHardhatRuntimeEnvironment.startLocalFhenix();
+    while (!FhenixHardhatRuntimeEnvironment_1.FhenixHardhatRuntimeEnvironment.isLocalFhenixRunning()) {
+        // a bit inefficient, but it's fine for now
+    }
     hre.fhenix = new FhenixHardhatRuntimeEnvironment_1.FhenixHardhatRuntimeEnvironment();
 });
 //# sourceMappingURL=index.js.map

@@ -5,10 +5,11 @@ interface FhenixHardhatRuntimeEnvironmentConfig {
     faucetPort?: number;
 }
 export declare class FhenixHardhatRuntimeEnvironment {
-    config: FhenixHardhatRuntimeEnvironmentConfig;
+    private config;
     readonly fhenixjs: FhenixClient;
-    readonly ready: Promise<void>;
     constructor(config?: FhenixHardhatRuntimeEnvironmentConfig);
+    static startLocalFhenix(config?: FhenixHardhatRuntimeEnvironmentConfig): Promise<void>;
+    static isLocalFhenixRunning(config?: FhenixHardhatRuntimeEnvironmentConfig): boolean;
     getFunds(addres: string): Promise<void>;
     sayHello(): string;
 }
