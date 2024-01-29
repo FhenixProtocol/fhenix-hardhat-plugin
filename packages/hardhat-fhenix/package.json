@@ -1,7 +1,7 @@
 {
-  "name": "@fhenixprotocol/fhenix-hardhat-docker",
-  "version": "0.0.1",
-  "description": "Hardhat plugin to run Fhenix node locally",
+  "name": "hardhat-fhenix",
+  "version": "1.0.0",
+  "description": "Hardhat TypeScript plugin boilerplate",
   "repository": "github:FhenixProtocol/fhenix-hardhat-plugin",
   "author": "Fhe Labs",
   "license": "MIT",
@@ -30,27 +30,27 @@
   "files": [
     "dist/src/",
     "src/",
-    "LICENSE",
+    "packages/LICENSE",
     "README.md"
   ],
   "devDependencies": {
-    "@types/chai": "^4.3.11",
-    "@types/fs-extra": "^5.1.0",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^8.10.66",
-    "chai": "^4.4.1",
-    "hardhat": "^2.19.4",
-    "mocha": "^7.2.0",
+    "@types/chai": "^4.1.7",
+    "@types/fs-extra": "^5.0.4",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^8.10.38",
+    "chai": "^4.2.0",
+    "hardhat": "^2.0.0",
+    "mocha": "^7.1.2",
     "prettier": "2.0.5",
-    "ts-node": "^8.10.2",
-    "tslint": "^5.20.1",
+    "ts-node": "^8.1.0",
+    "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.3.0",
-    "typescript": "^5.3.3"
+    "tslint-plugin-prettier": "^2.0.1",
+    "typescript": "^4.0.3"
   },
   "dependencies": {
-    "axios": "^1.6.7",
-    "ethers": "latest"
+    "axios": "^1.6.5",
+    "fhenixjs": "file:../../../fhenix.js"
   },
   "peerDependencies": {
     "hardhat": "^2.0.0"

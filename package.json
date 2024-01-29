@@ -1,59 +1,17 @@
 {
-  "name": "fhenix-hardhat-plugin",
-  "version": "0.0.1",
-  "description": "Hardhat TypeScript plugin boilerplate",
-  "repository": "github:FhenixProtocol/fhenix-hardhat-plugin",
-  "author": "Fhe Labs",
+  "name": "fhenix-hardhat-plugin-root",
+  "version": "1.0.0",
   "license": "MIT",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
-  "keywords": [
-    "ethereum",
-    "smart-contracts",
-    "hardhat",
-    "hardhat-plugin",
-    "fhe",
-    "fhenix"
-  ],
-  "config": {
-    "image": "ghcr.io/fhenixprotocol/localfhenix:v0.1.0-beta2"
-  },
   "scripts": {
-    "lint:fix": "prettier --write 'src/**/*.{js,ts}' 'test/**/*.{js,ts}' && tslint --fix --config tslint.json --project tsconfig.json",
-    "lint": "tslint --config tslint.json --project tsconfig.json",
-    "test": "mocha --exit --recursive --timeout 60000 'test/**/*.test.ts'",
-    "build": "tsc",
-    "watch": "tsc -w",
-    "prepublishOnly": "npm run build",
-    "postinstall": "docker rm -f localfhenix 2> /dev/null ; docker pull $npm_package_config_image"
+    "preinstall": "npx only-allow pnpm",
+    "format": "prettier --write --cache .",
+    "lint": "pnpm -r --filter='./packages/*' run lint",
+    "build": "pnpm -r --filter='./packages/*' run build",
+    "test": "pnpm -r --filter='./packages/*' run test"
   },
-  "files": [
-    "dist/src/",
-    "src/",
-    "LICENSE",
-    "README.md"
-  ],
-  "devDependencies": {
-    "@types/chai": "^4.1.7",
-    "@types/fs-extra": "^5.0.4",
-    "@types/mocha": "^5.2.6",
-    "@types/node": "^8.10.38",
-    "chai": "^4.2.0",
-    "hardhat": "^2.0.0",
-    "mocha": "^7.1.2",
-    "prettier": "2.0.5",
-    "ts-node": "^8.1.0",
-    "tslint": "^5.16.0",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.0.1",
-    "typescript": "^4.0.3"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FhenixProtocol/fhenix-hardhat-plugin/"
   },
-  "dependencies": {
-    "axios": "^1.6.5",
-    "ethers": "latest",
-    "fhenixjs": "file:../fhenix.js"
-  },
-  "peerDependencies": {
-    "hardhat": "^2.0.0"
-  }
+  "private": true
 }

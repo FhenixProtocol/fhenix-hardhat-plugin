@@ -13,6 +13,8 @@
     "no-empty": false,
     "no-console": false,
     "only-arrow-functions": false,
+    "no-shadowed-variable": false,
+    "unnecessary-bind": false,
     "variable-name": [
       true,
       "check-format",

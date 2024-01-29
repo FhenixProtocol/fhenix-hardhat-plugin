@@ -1,9 +1,6 @@
 import axios from "axios";
-import child_process from "child_process";
-import { FhenixClient, getPermit  } from "fhenixjs";
-import { HardhatRuntimeEnvironment, EthereumProvider } from "hardhat/types";
-import { FHENIX_IMAGE } from "./consts";
-import { ethers } from "ethers";
+import { FhenixClient, getPermit } from "fhenixjs";
+import { EthereumProvider, HardhatRuntimeEnvironment } from "hardhat/types";
 
 interface FhenixHardhatRuntimeEnvironmentConfig {
   /// rpcPort defaults to 8545
@@ -22,11 +19,10 @@ interface Container {
 
 export class FhenixHardhatRuntimeEnvironment {
   /// fhenixjs is a FhenixClient connected to the localfhenix docker container
-  /// it has an easy to use API for encrypting inputs and decrypting outputs
+  /// it has an easy-to-use API for encrypting inputs and decrypting outputs
   public readonly client: FhenixClient;
-  /// ready is a promise that resolves when the localfhenix docker container is ready
   public readonly provider: EthereumProvider | undefined;
-  
+
   public constructor(
     hre: HardhatRuntimeEnvironment,
     public config: FhenixHardhatRuntimeEnvironmentConfig = {
@@ -38,20 +34,20 @@ export class FhenixHardhatRuntimeEnvironment {
     this.config.rpcPort = this.config.rpcPort ?? 8545;
     this.config.wsPort = this.config.wsPort ?? 8548;
     this.config.faucetPort = this.config.faucetPort ?? 3000;
-    
+
+    // if we already have a provider here we can initialize the client
     if (hre?.network !== undefined && hre.network.provider) {
-
       this.provider = hre.network.provider;
-      console.log(`provider: ${JSON.stringify(this.provider)}`);
-
       this.client = new FhenixClient({
         ignoreErrors: false,
         provider: hre.network.provider,
       });
     } else {
+      // this is fake - if we don't have a provider we can't initialize the client - not sure if this ever happens except for tests
+
       this.client = new FhenixClient({
-        ignoreErrors: false,
-        provider: new ethers.JsonRpcProvider(`http://localhost:${this.config.rpcPort}`),
+        ignoreErrors: true,
+        provider: new MockProvider(),
       });
     }
   }
@@ -74,17 +70,34 @@ export class FhenixHardhatRuntimeEnvironment {
     }
   }
 
-  public async createPermit(contractAddress: string) {
-    if (this.provider === undefined) {
-      throw new Error("error getting ethers provider from hardhat runtime environment");
+  public async createPermit(contractAddress: string, provider?: any) {
+    if (!provider && this.provider === undefined) {
+      throw new Error("no provider provided");
     }
-    
-    const permit = await getPermit(contractAddress, this.provider!);
+
+    const permit = await getPermit(contractAddress, provider || this.provider!);
     this.client.storePermit(permit);
     return permit;
   }
-  
+
   public sayHello() {
     return "hello";
+  }
+}
+
+export class MockProvider {
+  public async send(
+    method: string,
+    params: any[] | Record<string, any>,
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      reject("provider not initialized");
+    });
+  }
+
+  public async getSigner(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      reject("provider not initialized");
+    });
   }
 }

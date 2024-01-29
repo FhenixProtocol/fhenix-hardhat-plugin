@@ -1,0 +1,57 @@
+{
+  "name": "@fhenixprotocol/fhenix-hardhat-docker",
+  "version": "0.0.1",
+  "description": "Hardhat plugin to run Fhenix node locally",
+  "repository": "github:FhenixProtocol/fhenix-hardhat-plugin",
+  "author": "Fhe Labs",
+  "license": "MIT",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "keywords": [
+    "ethereum",
+    "smart-contracts",
+    "hardhat",
+    "hardhat-plugin",
+    "fhe",
+    "fhenix"
+  ],
+  "config": {
+    "image": "ghcr.io/fhenixprotocol/localfhenix:v0.1.0-beta2"
+  },
+  "scripts": {
+    "lint:fix": "prettier --write 'src/**/*.{js,ts}' 'test/**/*.{js,ts}' && tslint --fix --config tslint.json --project tsconfig.json",
+    "lint": "tslint --config tslint.json --project tsconfig.json",
+    "test": "mocha --exit --recursive --timeout 60000 'test/**/*.test.ts'",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prepublishOnly": "npm run build",
+    "postinstall": "docker rm -f localfhenix 2> /dev/null ; docker pull $npm_package_config_image"
+  },
+  "files": [
+    "dist/src/",
+    "src/",
+    "LICENSE",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@types/chai": "^4.3.11",
+    "@types/fs-extra": "^5.1.0",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^16.18.76",
+    "chai": "^4.4.1",
+    "hardhat": "^2.0.0",
+    "mocha": "^7.2.0",
+    "prettier": "2.0.5",
+    "ts-node": "^8.10.2",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.3.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2"
+  },
+  "peerDependencies": {
+    "hardhat": "^2.0.0"
+  }
+}
