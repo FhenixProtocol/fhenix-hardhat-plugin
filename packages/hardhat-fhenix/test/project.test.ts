@@ -25,7 +25,8 @@ describe("Test Fhenix Plugin", function () {
       let err: Error | EncryptedUint8;
       try {
         err = await this.hre.fhenixjs.client.encrypt_uint8(1);
-      } catch (e: any) {
+      } catch (e) {
+        // @ts-ignore
         err = e;
       }
       expect(err).to.be.an("error");

@@ -1,4 +1,8 @@
-import { LOCALFHENIX_CONTAINER_NAME, TASK_FHENIX_DOCKER_STOP, TASK_FHENIX_NODE } from "../src/const";
+import {
+  LOCALFHENIX_CONTAINER_NAME,
+  TASK_FHENIX_DOCKER_STOP,
+  TASK_FHENIX_NODE,
+} from "../src/const";
 import { isRunningContainer, stopLocalFhenix } from "../src/docker";
 
 import { useEnvironment } from "./helpers";
