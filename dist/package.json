@@ -51,7 +51,7 @@
     "dependencies": {
         "axios": "^1.6.5",
         "ethers": "latest",
-        "fhenixjs": "github:FhenixProtocol/fhenix.js#5104cf3"
+        "fhenixjs": "0.1.0-beta.2"
     },
     "peerDependencies": {
         "hardhat": "^2.0.0"
