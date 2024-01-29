@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
@@ -12,8 +12,8 @@ dependencies:
     specifier: latest
     version: 6.10.0
   fhenixjs:
-    specifier: github:FhenixProtocol/fhenix.js#5104cf3
-    version: git/github.com+FhenixProtocol/fhenix.js/5104cf3
+    specifier: file:../fhenix.js
+    version: file:../fhenix.js
 
 devDependencies:
   '@types/chai':
@@ -1712,7 +1712,6 @@ packages:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
     dev: true
-    bundledDependencies: false
 
   /evp_bytestokey@1.0.3:
     resolution: {integrity: sha512-/f2Go4TognH/KvCISP7OUsHn85hT9nUkxxA9BEWxFn+Oj9o8ZNLm/40hdlgSLyuOimsrTKLUMEorQexp/aPQeA==}
@@ -3604,10 +3603,10 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  git/github.com+FhenixProtocol/fhenix.js/5104cf3:
-    resolution: {commit: 5104cf3, repo: git@github.com:FhenixProtocol/fhenix.js.git, type: git}
+  file:../fhenix.js:
+    resolution: {directory: ../fhenix.js, type: directory}
     name: fhenixjs
-    version: 0.0.4
+    version: 0.1.0-beta.2
     dependencies:
       ethers: 6.10.0
       node-tfhe: 0.3.1

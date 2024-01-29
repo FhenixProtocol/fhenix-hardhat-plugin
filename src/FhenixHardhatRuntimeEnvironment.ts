@@ -1,9 +1,9 @@
 import axios from "axios";
 import child_process from "child_process";
-import { JsonRpcProvider } from "ethers";
-import { FhenixClient } from "fhenixjs";
-
-import { config as packageConfig } from "../package.json";
+import { FhenixClient, getPermit  } from "fhenixjs";
+import { HardhatRuntimeEnvironment, EthereumProvider } from "hardhat/types";
+import { FHENIX_IMAGE } from "./consts";
+import { ethers } from "ethers";
 
 interface FhenixHardhatRuntimeEnvironmentConfig {
   /// rpcPort defaults to 8545
@@ -23,11 +23,12 @@ interface Container {
 export class FhenixHardhatRuntimeEnvironment {
   /// fhenixjs is a FhenixClient connected to the localfhenix docker container
   /// it has an easy to use API for encrypting inputs and decrypting outputs
-  public readonly fhenixjs: FhenixClient;
+  public readonly client: FhenixClient;
   /// ready is a promise that resolves when the localfhenix docker container is ready
-  public readonly ready: Promise<void>;
-
+  public readonly provider: EthereumProvider | undefined;
+  
   public constructor(
+    hre: HardhatRuntimeEnvironment,
     public config: FhenixHardhatRuntimeEnvironmentConfig = {
       rpcPort: 8545,
       wsPort: 8548,
@@ -37,96 +38,27 @@ export class FhenixHardhatRuntimeEnvironment {
     this.config.rpcPort = this.config.rpcPort ?? 8545;
     this.config.wsPort = this.config.wsPort ?? 8548;
     this.config.faucetPort = this.config.faucetPort ?? 3000;
+    
+    if (hre?.network !== undefined && hre.network.provider) {
 
-    this.fhenixjs = new FhenixClient({
-      provider: new JsonRpcProvider(`http://localhost:${this.config.rpcPort}`),
-    });
+      this.provider = hre.network.provider;
+      console.log(`provider: ${JSON.stringify(this.provider)}`);
 
-    this.ready = new Promise((resolve, reject) => {
-      let stdout: string;
-
-      try {
-        stdout = child_process
-          .execSync(
-            `docker ps -a --format '{"name": "{{ .Names }}", "ports": "{{ .Ports }}", "image": "{{ .Image }}"}'`,
-          )
-          .toString();
-      } catch (error) {
-        return reject(error);
-      }
-
-      const [existingLocalfhenix]: Container[] = stdout
-        .split("\n")
-        .map((line) => {
-          try {
-            return JSON.parse(line);
-          } catch (error) {
-            return {}; // avoid null pointer exception on container.name
-          }
-        })
-        .filter((container: Container) => container.name === "localfhenix");
-
-      const run = () => {
-        try {
-          child_process.execSync(`docker rm -f localfhenix`);
-        } catch (error) {
-          if (!(error as Error)?.message?.includes("No such container")) {
-            return reject(error);
-          }
-        }
-
-        try {
-          child_process.execSync(
-            `docker run -d --rm -p "${this.config.rpcPort}":8547 -p "${this.config.wsPort}":8548 -p "${this.config.faucetPort}":3000 --name localfhenix "${packageConfig.image}"`,
-          );
-        } catch (error) {
-          return reject(error);
-        }
-      };
-
-      if (!existingLocalfhenix) {
-        run();
-        return resolve();
-      }
-
-      if (existingLocalfhenix.image !== packageConfig.image) {
-        run();
-        return resolve();
-      }
-
-      const portMappings = Array.from(
-        existingLocalfhenix.ports.matchAll(/0\.0\.0\.0:\d+->\d+\/tcp/g),
-      ).map((match) => match[0]);
-
-      if (portMappings.length !== 3) {
-        run();
-        return resolve();
-      }
-
-      if (
-        !portMappings.includes(`0.0.0.0:${this.config.faucetPort}->3000/tcp`)
-      ) {
-        run();
-        return resolve();
-      }
-
-      if (!portMappings.includes(`0.0.0.0:${this.config.rpcPort}->8547/tcp`)) {
-        run();
-        return resolve();
-      }
-
-      if (!portMappings.includes(`0.0.0.0:${this.config.wsPort}->8548/tcp`)) {
-        run();
-        return resolve();
-      }
-
-      resolve();
-    });
+      this.client = new FhenixClient({
+        ignoreErrors: false,
+        provider: hre.network.provider,
+      });
+    } else {
+      this.client = new FhenixClient({
+        ignoreErrors: false,
+        provider: new ethers.JsonRpcProvider(`http://localhost:${this.config.rpcPort}`),
+      });
+    }
   }
 
-  public async getFunds(addres: string) {
+  public async getFunds(address: string) {
     const response = await axios.get(
-      `http://localhost:${this.config.faucetPort}/faucet?address=${addres}`,
+      `http://localhost:${this.config.faucetPort}/faucet?address=${address}`,
     );
 
     if (response.status !== 200) {
@@ -142,6 +74,16 @@ export class FhenixHardhatRuntimeEnvironment {
     }
   }
 
+  public async createPermit(contractAddress: string) {
+    if (this.provider === undefined) {
+      throw new Error("error getting ethers provider from hardhat runtime environment");
+    }
+    
+    const permit = await getPermit(contractAddress, this.provider!);
+    this.client.storePermit(permit);
+    return permit;
+  }
+  
   public sayHello() {
     return "hello";
   }

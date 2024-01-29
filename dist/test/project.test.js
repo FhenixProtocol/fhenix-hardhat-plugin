@@ -8,10 +8,19 @@ describe("Integration tests examples", function () {
     describe("Hardhat Runtime Environment extension", function () {
         (0, helpers_1.useEnvironment)("hardhat-project");
         it("Should add the example field", function () {
-            chai_1.assert.instanceOf(this.hre.fhenix, FhenixHardhatRuntimeEnvironment_1.FhenixHardhatRuntimeEnvironment);
+            chai_1.assert.instanceOf(this.hre.fhenixjs.utils, FhenixHardhatRuntimeEnvironment_1.FhenixHardhatRuntimeEnvironment);
         });
         it("The example field should say hello", function () {
-            chai_1.assert.equal(this.hre.fhenix.sayHello(), "hello");
+            chai_1.assert.equal(this.hre.fhenixjs.utils.sayHello(), "hello");
+        });
+    });
+    describe("Hardhat Runtime Environment extension for localfhenix", function () {
+        (0, helpers_1.useEnvironment)("localfhenix");
+        it("Should add the example field", function () {
+            chai_1.assert.instanceOf(this.hre.fhenixjs.utils, FhenixHardhatRuntimeEnvironment_1.FhenixHardhatRuntimeEnvironment);
+        });
+        it("The example field should say hello", function () {
+            chai_1.assert.equal(this.hre.fhenixjs.utils.sayHello(), "hello");
         });
     });
     // describe("HardhatConfig extension", function () {
@@ -28,7 +37,7 @@ describe("Unit tests examples", function () {
     describe("FhenixHardhatRuntimeEnvironment", function () {
         describe("sayHello", function () {
             it("Should say hello", async function () {
-                const field = new FhenixHardhatRuntimeEnvironment_1.FhenixHardhatRuntimeEnvironment();
+                const field = new FhenixHardhatRuntimeEnvironment_1.FhenixHardhatRuntimeEnvironment({});
                 chai_1.assert.equal(field.sayHello(), "hello");
             });
         });

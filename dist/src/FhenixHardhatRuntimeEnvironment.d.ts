@@ -1,4 +1,5 @@
 import { FhenixClient } from "fhenixjs";
+import { HardhatRuntimeEnvironment, EthereumProvider } from "hardhat/types";
 interface FhenixHardhatRuntimeEnvironmentConfig {
     rpcPort?: number;
     wsPort?: number;
@@ -6,10 +7,11 @@ interface FhenixHardhatRuntimeEnvironmentConfig {
 }
 export declare class FhenixHardhatRuntimeEnvironment {
     config: FhenixHardhatRuntimeEnvironmentConfig;
-    readonly fhenixjs: FhenixClient;
-    readonly ready: Promise<void>;
-    constructor(config?: FhenixHardhatRuntimeEnvironmentConfig);
-    getFunds(addres: string): Promise<void>;
+    readonly client: FhenixClient;
+    readonly provider: EthereumProvider | undefined;
+    constructor(hre: HardhatRuntimeEnvironment, config?: FhenixHardhatRuntimeEnvironmentConfig);
+    getFunds(address: string): Promise<void>;
+    createPermit(contractAddress: string): Promise<import("fhenixjs").Permit>;
     sayHello(): string;
 }
 export {};
