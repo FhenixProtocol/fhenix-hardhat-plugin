@@ -39,19 +39,3 @@ extendConfig((config, userConfig) => {
     },
   };
 });
-
-subtask(TASK_NODE_SERVER_READY).setAction(
-  async ({ address, port, provider, server }, hre, runSuper) => {
-    await runSuper();
-
-    console.log("HELLO FROM INIT CLIENT AFTER PROIVDER");
-
-    // initialize the client only after we have a provider
-    hre.fhenixjs.client = new FhenixClient({
-      ignoreErrors: true,
-      provider,
-    });
-
-    return;
-  },
-);
