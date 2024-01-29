@@ -3618,7 +3618,7 @@ packages:
   file:../fhenix.js:
     resolution: {directory: ../fhenix.js, type: directory}
     name: fhenixjs
-    version: 0.1.0-beta.2
+    version: 0.1.0-beta.4
     dependencies:
       ethers: 6.10.0
       node-tfhe: 0.3.1
