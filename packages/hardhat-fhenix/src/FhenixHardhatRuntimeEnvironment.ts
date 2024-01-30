@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FhenixClient, getPermit } from "fhenixjs";
+import { FhenixClient, SupportedProvider, getPermit } from "fhenixjs";
 import { EthereumProvider, HardhatRuntimeEnvironment } from "hardhat/types";
 
 interface FhenixHardhatRuntimeEnvironmentConfig {
@@ -9,12 +9,6 @@ interface FhenixHardhatRuntimeEnvironmentConfig {
   wsPort?: number;
   /// faucetPort defaults to 3000
   faucetPort?: number;
-}
-
-interface Container {
-  name: string;
-  ports: string;
-  image: string;
 }
 
 export class FhenixHardhatRuntimeEnvironment {
@@ -70,7 +64,10 @@ export class FhenixHardhatRuntimeEnvironment {
     }
   }
 
-  public async createPermit(contractAddress: string, provider?: any) {
+  public async createPermit(
+    contractAddress: string,
+    provider?: SupportedProvider,
+  ) {
     if (!provider && this.provider === undefined) {
       throw new Error("no provider provided");
     }
