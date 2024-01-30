@@ -1,0 +1,1 @@
+{"version":3,"file":"hardhat.config.js","sourceRoot":"","sources":["../../../../test/fixture-projects/localfhenix/hardhat.config.ts"],"names":[],"mappings":";;AAGA,8BAA4B;AAE5B,MAAM,MAAM,GAAsB;IAChC,QAAQ,EAAE,QAAQ;IAClB,cAAc,EAAE,aAAa;IAC7B,QAAQ,EAAE;QACR,WAAW,EAAE;YACX,GAAG,EAAE,uBAAuB;SAC7B;KACF;IACD,KAAK,EAAE;IACL,kBAAkB;KACnB;CACF,CAAC;AAEF,kBAAe,MAAM,CAAC"}
