@@ -8,7 +8,7 @@ interface Container {
   image: string;
 }
 
-export const isRunningContainer = (name: string) => {
+export const isContainerRunning = (name: string) => {
   let stdout = "";
   try {
     stdout = execSync(
@@ -36,21 +36,19 @@ export const isRunningContainer = (name: string) => {
 };
 
 export const runLocalFhenixSeparateProcess = async (
-  port: number,
+  rpc: number,
   ws: number,
   faucet: number,
   image: string,
 ) => {
-  const commandToRun = `docker run --rm -p ${port}:8547 -p ${ws}:8548 -p ${faucet}:3000 --name ${LOCALFHENIX_CONTAINER_NAME} ${image}`;
-
-  // [ 'inherit', 'pipe', 'inherit']
+  const commandToRun = `docker run --rm -p "${rpc}":8547 -p "${ws}":8548 -p "${faucet}":3000 --name "${LOCALFHENIX_CONTAINER_NAME}" "${image}"`;
 
   spawn("/usr/bin/env", commandToRun.split(" "), { stdio: "ignore" });
 };
 
 export const stopLocalFhenix = () => {
   try {
-    execSync(`docker rm -f ${LOCALFHENIX_CONTAINER_NAME}`);
+    execSync(`docker rm -f "${LOCALFHENIX_CONTAINER_NAME}"`);
   } catch (error) {
     if (!(error as Error)?.message?.includes("No such container")) {
       console.error(`error: ${error}`);

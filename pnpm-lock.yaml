@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -19,8 +19,8 @@ importers:
         specifier: ^1.6.5
         version: 1.6.5
       fhenixjs:
-        specifier: ^0.1.0-beta.4
-        version: 0.1.0-beta.4
+        specifier: ^0.1.0-beta.5
+        version: 0.1.0-beta.5
     devDependencies:
       '@types/chai':
         specifier: ^4.1.7
@@ -1756,6 +1756,7 @@ packages:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
     dev: true
+    bundledDependencies: false
 
   /evp_bytestokey@1.0.3:
     resolution: {integrity: sha512-/f2Go4TognH/KvCISP7OUsHn85hT9nUkxxA9BEWxFn+Oj9o8ZNLm/40hdlgSLyuOimsrTKLUMEorQexp/aPQeA==}
@@ -1768,8 +1769,8 @@ packages:
     resolution: {integrity: sha512-VxPP4NqbUjj6MaAOafWeUn2cXWLcCtljklUtZf0Ind4XQ+QPtmA0b18zZy0jIQx+ExRVCR/ZQpBmik5lXshNsw==}
     dev: true
 
-  /fhenixjs@0.1.0-beta.4:
-    resolution: {integrity: sha512-jNn+x7Rwqo2epoHJTsQxPhd/Xmya/RBRLIeRNeEC0g3Pjg96/txRHGPCCFn4efmnJlxodm2fvskRgcapDL/6PA==}
+  /fhenixjs@0.1.0-beta.5:
+    resolution: {integrity: sha512-Bp++KetxeckF+dOwCQwsN76JeYJ+2nZuV2n+AAdQrE+N0C/FlEFx45Y4omlKEea1F6ASWmPfA4CHVPUgkAIRRg==}
     dependencies:
       ethers: 6.10.0
       node-tfhe: 0.3.1
