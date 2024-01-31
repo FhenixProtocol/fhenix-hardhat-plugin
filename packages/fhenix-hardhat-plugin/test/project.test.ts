@@ -55,7 +55,7 @@ describe("Unit tests examples", function () {
   describe("FhenixHardhatRuntimeEnvironment", function () {
     describe("sayHello", function () {
       it("Should say hello", async function () {
-        const field = new FhenixHardhatRuntimeEnvironment({} as any);
+        const field = new FhenixHardhatRuntimeEnvironment({} as any, {} as any);
         assert.equal(field.sayHello(), "hello");
       });
     });

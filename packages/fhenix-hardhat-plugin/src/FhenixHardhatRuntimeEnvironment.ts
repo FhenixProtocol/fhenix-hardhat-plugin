@@ -9,6 +9,10 @@ interface FhenixHardhatRuntimeEnvironmentConfig {
 }
 
 export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
+  // TODO remove config
+  // move the faucet to a task on the example repo
+  // there's no good way to discover the faucet port from here
+
   public constructor(
     public hre: HardhatRuntimeEnvironment,
     public config: FhenixHardhatRuntimeEnvironmentConfig,
