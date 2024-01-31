@@ -41,7 +41,7 @@ export const runLocalFhenixSeparateProcess = async (
   faucet: number,
   image: string,
 ) => {
-  const commandToRun = `docker run --rm -p "${rpc}":8547 -p "${ws}":8548 -p "${faucet}":3000 --name "${LOCALFHENIX_CONTAINER_NAME}" "${image}"`;
+  const commandToRun = `docker run --rm -p ${rpc}:8547 -p ${ws}:8548 -p ${faucet}:3000 --name ${LOCALFHENIX_CONTAINER_NAME} ${image}`;
 
   spawn("/usr/bin/env", commandToRun.split(" "), { stdio: "ignore" });
 };

@@ -17,9 +17,8 @@ describe("Fhenix Docker Tests", function () {
   describe("Task Fhenix Docker Startup", function () {
     useEnvironment("localfhenix");
 
-    function _delay(ms: number): Promise<void> {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    }
+    const sleep = (ms: number): Promise<void> =>
+      new Promise((resolve) => setTimeout(resolve, ms));
 
     it("Should successfully start and stop the server", async function () {
       // Start the server by running the task
@@ -29,10 +28,15 @@ describe("Fhenix Docker Tests", function () {
 
       await this.hre.run(TASK_FHENIX_DOCKER_START);
 
-      await _delay(3000);
-
-      if (!isContainerRunning(LOCALFHENIX_CONTAINER_NAME)) {
-        throw new Error("Server did not start");
+      const maxTries = 10;
+      for (let tries = 0; tries <= maxTries; tries++) {
+        if (tries === maxTries) {
+          throw new Error("Server did not start");
+        }
+        if (isContainerRunning(LOCALFHENIX_CONTAINER_NAME)) {
+          break;
+        }
+        await sleep(500);
       }
 
       // Wait for the server to stop
