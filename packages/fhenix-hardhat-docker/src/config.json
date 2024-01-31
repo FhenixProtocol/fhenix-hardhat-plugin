@@ -1,0 +1,4 @@
+{
+  "image": "ghcr.io/fhenixprotocol/localfhenix:v0.1.0-beta2",
+  "container_name": "localfhenix_hh_plugin"
+}

@@ -62,7 +62,7 @@ importers:
         specifier: ^1.6.5
         version: 1.6.5
       fhenixjs:
-        specifier: ^0.1.0-beta.5
+        specifier: 0.1.0-beta.5
         version: 0.1.0-beta.5
     devDependencies:
       '@types/chai':
