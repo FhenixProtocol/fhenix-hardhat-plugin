@@ -1,58 +1,110 @@
-# Hardhat TypeScript plugin boilerplate
+# FhenixJS Hardhat Plugin
 
-This is a sample Hardhat plugin written in TypeScript. Creating a Hardhat plugin
-can be as easy as extracting a part of your config into a different file and
-publishing it to npm.
+FhenixJS is a Hardhat plugin designed to extend your Hardhat environment with additional capabilities focused on the Fhenix blockchain development. It integrates seamlessly with your Hardhat projects to provide a local Fhenix environment, including customized network configuration and utilities for managing funds and permits within your blockchain applications.
 
-This sample project contains an example on how to do that, but also comes with
-many more features:
+## Features
 
-- A mocha test suite ready to use
-- TravisCI already setup
-- A package.json with scripts and publishing info
-- Examples on how to do different things
+- **Local Fhenix Environment:** Automatically sets up a local Fhenix network configuration within Hardhat, allowing for easy deployment and interaction with Fhenix contracts.
+- **Faucet Integration:** Enables developers to easily obtain funds for testing purposes through a simple API call to a local faucet.
+- **Permit Management:** Simplifies the process of creating and storing permit signatures required for transactions, reducing the complexity of interacting with contracts that require permissions.
+
+If you want to see a full example in action, check out our [Hardhat Example Template](https://github.com/FhenixProtocol/fhenix-hardhat-example)!
 
 ## Installation
 
-To start working on your project, just run
+To use FhenixJS in your Hardhat project, first install the plugin via npm (or your favorite package manager):
 
-```bash
-npm install
+```sh
+pnpm install fhenix-hardhat-plugin
 ```
 
-## Plugin development
+If you wish to run your own local dev environment, please install the [fhenix-hardhat-docker](https://github.com/fhenixprotocol/fhenix-hardhat-docker) plugin as well.
 
-Make sure to read our [Plugin Development Guide](https://hardhat.org/advanced/building-plugins.html) to learn how to build a plugin.
+```sh
+pnpm install fhenix-hardhat-docker
+```
 
-## Testing
+## Setup
 
-Running `npm run test` will run every test located in the `test/` folder. They
-use [mocha](https://mochajs.org) and [chai](https://www.chaijs.com/),
-but you can customize them.
+After installation, import the plugin in your Hardhat configuration file (e.g., `hardhat.config.js`):
 
-We recommend creating unit tests for your own modules, and integration tests for
-the interaction of the plugin with Hardhat and its dependencies.
+```javascript
+require("fhenix-hardhat-plugin");
+// if using the docker plugin
+require("fhenix-hardhat-docker");
+```
 
-## Linting and autoformat
+or if you are using TypeScript, in your `hardhat.config.ts`:
 
-All of Hardhat projects use [prettier](https://prettier.io/) and
-[tslint](https://palantir.github.io/tslint/).
+```typescript
+import "fhenix-hardhat-plugin";
+// if using the docker plugin
+import "fhenix-hardhat-docker";
+```
 
-You can check if your code style is correct by running `npm run lint`, and fix
-it with `npm run lint:fix`.
+## Configuration
 
-## Building the project
+### Network Configuration
 
-Just run `npm run build` ️👷
+The plugin automatically adds a `localfhenix` network configuration to your Hardhat project. This configuration is designed for local development and includes settings such as gas estimates, accounts, and the local network URL.
 
-## README file
+To target this network, simply add `--network localfhenix` to your hardhat commands, or set it as the default.
 
-This README describes this boilerplate project, but won't be very useful to your
-plugin users.
+### Using FhenixJS from Hardhat Runtime Environment
 
-Take a look at `README-TEMPLATE.md` for an example of what a Hardhat plugin's
-README should look like.
+After importing `fhenix-hardhat-plugin` hardhat will automatically extend the Hardhat Runtime Environment (HRE) with a `fhenixjs` object, providing access to Fhenix-specific functionality:
 
-## Migrating from Buidler?
+- Use the `fhenixjs` object directly to encrypt, unseal or manage permits.
+- **`getFunds(address: string)`**: Request funds from the local faucet for the specified address.
+- **`createPermit(contractAddress: string, provider?: SupportedProvider)`**: Create and store a permit for interacting with a contract.
 
-Take a look at [the migration guide](MIGRATION.md)!
+## Usage
+
+### Local Dev Environment
+
+To set up a localfhenix instance, simply import `fhenix-hardhat-docker`. This will add two new hardhat tasks:
+
+- **`localfhenix:start`** To start a local dev environment using docker. By default, the instance will listen for rpc connections on port `42069`
+- **`localfhenix:stop`** Stops the docker container
+
+To start the container:
+
+```sh
+pnpm hardhat localfhenix:start
+```
+
+If starting the instance was successful, you should see the message: `Started LocalFhenix successfully at 127.0.0.1:42069`.
+
+To stop the running container:
+
+```sh
+pnpm hardhat localfhenix:stop
+```
+
+Which will result in `Successfully shut down LocalFhenix`
+
+### Requesting Funds
+
+To request funds from the local faucet for an address, use the `getFunds` method:
+
+```javascript
+await hre.fhenixjs.getFunds("your_wallet_address");
+```
+
+### Encryption
+
+```javascript
+const encyrptedAmount = await fhenixjs.encrypt_uint32(15);
+```
+
+### Creating a Permit
+
+To create a permit for a contract, use the `createPermit` method:
+
+```javascript
+const permit = await hre.fhenixjs.createPermit("contract_address");
+```
+
+## Support
+
+For issues, suggestions, or contributions, please open an issue or pull request in the GitHub repository.
