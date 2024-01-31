@@ -1,6 +1,6 @@
-# FhenixJS Hardhat Plugin
+# Fhenix Hardhat Plugin
 
-FhenixJS is a Hardhat plugin designed to extend your Hardhat environment with additional capabilities focused on the Fhenix blockchain development. It integrates seamlessly with your Hardhat projects to provide a local Fhenix environment, including customized network configuration and utilities for managing funds and permits within your blockchain applications.
+Fhenix Hardhat Plugin is designed to extend your Hardhat environment with additional capabilities focused on Fhenix. It integrates seamlessly with your Hardhat projects to provide a local Fhenix environment, including customized network configuration and utilities for managing funds and permits within your blockchain applications.
 
 ## Features
 
