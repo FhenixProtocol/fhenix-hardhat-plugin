@@ -1,13 +1,14 @@
 {
   "name": "fhenix-hardhat-plugin-root",
-  "version": "1.0.0",
+  "version": "0.1.0-beta.1",
   "license": "MIT",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "format": "prettier --write --cache .",
     "lint": "pnpm -r --filter='./packages/*' run lint",
     "build": "pnpm -r --filter='./packages/*' run build",
-    "test": "pnpm -r --filter='./packages/*' run test"
+    "test": "pnpm -r --filter='./packages/*' run test",
+    "publish": "pnpm -r --filter='./packages/*' publish --no-git-checks"
   },
   "repository": {
     "type": "git",
