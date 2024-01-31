@@ -19,14 +19,14 @@
     "lint:fix": "prettier --write 'src/**/*.{js,ts}' 'test/**/*.{js,ts}' && tslint --fix --config tslint.json --project tsconfig.json",
     "lint": "tslint --config tslint.json --project tsconfig.json",
     "test": "mocha --exit --recursive --timeout 60000 'test/*.test.ts'",
-    "build": "tsc && cp package.json LICENSE dist",
+    "build": "tsc",
     "watch": "tsc -w",
     "prepublishOnly": "npm run build"
   },
   "files": [
     "dist/src/",
     "src/",
-    "packages/LICENSE",
+    "LICENSE",
     "README.md"
   ],
   "devDependencies": {
