@@ -4,8 +4,8 @@ import { task, types } from "hardhat/config";
 import {
   FHENIX_DEFAULT_IMAGE,
   LOCALFHENIX_CONTAINER_NAME,
-  TASK_FHENIX_DOCKER_STOP,
   TASK_FHENIX_DOCKER_START,
+  TASK_FHENIX_DOCKER_STOP,
 } from "./const";
 import {
   isContainerRunning,

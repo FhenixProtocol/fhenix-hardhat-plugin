@@ -1,6 +1,11 @@
 import axios from "axios";
-import { FhenixClient, SupportedProvider, getPermit } from "fhenixjs";
-import { EthereumProvider, HardhatRuntimeEnvironment } from "hardhat/types";
+import {
+  FhenixClient,
+  getPermit,
+  InstanceParams,
+  SupportedProvider,
+} from "fhenixjs";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
 
 interface FhenixHardhatRuntimeEnvironmentConfig {
   rpcPort: number;
@@ -17,25 +22,18 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     public hre: HardhatRuntimeEnvironment,
     public config: FhenixHardhatRuntimeEnvironmentConfig,
   ) {
-    super({
+    let superArgs: InstanceParams = {
       ignoreErrors: true,
-      provider: hre.network.provider,
-    });
-
+      provider: new MockProvider(),
+    };
     if (hre?.network !== undefined && hre.network.provider) {
-      super({
+      superArgs = {
         ignoreErrors: true,
         provider: hre.network.provider,
-      });
-    } else {
-      // mock
-      // if we don't have a provider we can't initialize the client
-      // not sure if this ever happens except for tests
-      super({
-        ignoreErrors: true,
-        provider: new MockProvider(),
-      });
+      };
     }
+
+    super(superArgs);
   }
 
   public async getFunds(address: string) {

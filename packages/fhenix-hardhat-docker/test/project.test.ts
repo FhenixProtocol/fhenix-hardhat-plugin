@@ -1,7 +1,7 @@
 import {
   LOCALFHENIX_CONTAINER_NAME,
-  TASK_FHENIX_DOCKER_STOP,
   TASK_FHENIX_DOCKER_START,
+  TASK_FHENIX_DOCKER_STOP,
 } from "../src/const";
 import { isContainerRunning, stopLocalFhenix } from "../src/docker";
 
