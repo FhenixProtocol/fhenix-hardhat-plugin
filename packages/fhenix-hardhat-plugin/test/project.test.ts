@@ -11,20 +11,17 @@ describe("Test Fhenix Plugin", function () {
     useEnvironment("hardhat-project");
 
     it("checks that loading fhenixjs on non-fhe chain doesn't crash", function () {
-      assert.instanceOf(
-        this.hre.fhenixjs.utils,
-        FhenixHardhatRuntimeEnvironment,
-      );
+      assert.instanceOf(this.hre.fhenixjs, FhenixHardhatRuntimeEnvironment);
     });
 
     it("checks that methods are injected on non-fhe chain", function () {
-      assert.equal(this.hre.fhenixjs.utils.sayHello(), "hello");
+      assert.equal(this.hre.fhenixjs.sayHello(), "hello");
     });
 
     it("checks that client doesn't work on a non-fhe chain", async function () {
       let err: Error | EncryptedUint8;
       try {
-        err = await this.hre.fhenixjs.client.encrypt_uint8(1);
+        err = await this.hre.fhenixjs.encrypt_uint8(1);
       } catch (e) {
         // @ts-ignore
         err = e;
@@ -39,14 +36,11 @@ describe("Test Fhenix Plugin", function () {
     // todo: add a test that mocks the fhenixjs client and checks that the plugin works
 
     it("checks that we can load fhenixjs on localfhenix", function () {
-      assert.instanceOf(
-        this.hre.fhenixjs.utils,
-        FhenixHardhatRuntimeEnvironment,
-      );
+      assert.instanceOf(this.hre.fhenixjs, FhenixHardhatRuntimeEnvironment);
     });
 
     it("checks that fhenixjs methods get injected on localfhenix", function () {
-      assert.equal(this.hre.fhenixjs.utils.sayHello(), "hello");
+      assert.equal(this.hre.fhenixjs.sayHello(), "hello");
     });
   });
 });

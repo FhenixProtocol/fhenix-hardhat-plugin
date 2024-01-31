@@ -1,4 +1,4 @@
-import * as fhenixjs from "fhenixjs";
+import { FhenixClient } from "fhenixjs";
 import "hardhat/types/config";
 import "hardhat/types/runtime";
 
@@ -8,9 +8,6 @@ declare module "hardhat/types/runtime" {
   // Fhenix extension to the Hardhat Runtime Environment.
   // This new field will be available in tasks' actions, scripts, and tests.
   export interface HardhatRuntimeEnvironment {
-    fhenixjs: typeof fhenixjs & {
-      client: fhenixjs.FhenixClient;
-      utils: FhenixHardhatRuntimeEnvironment;
-    };
+    fhenixjs: FhenixClient & FhenixHardhatRuntimeEnvironment;
   }
 }

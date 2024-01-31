@@ -8,18 +8,13 @@ import "./type-extensions";
 
 extendEnvironment((hre) => {
   hre.fhenixjs = lazyObject(() => {
-    const fhenixjs = require("fhenixjs");
-
     const fhenix = new FhenixHardhatRuntimeEnvironment(hre, {
       rpcPort: 42069,
       wsPort: 42070,
       faucetPort: 42000,
     });
-    return {
-      ...fhenixjs,
-      utils: fhenix,
-      client: fhenix,
-    };
+
+    return fhenix;
   });
 });
 

@@ -9,7 +9,7 @@ import { useEnvironment } from "./helpers";
 
 describe("Fhenix Docker Tests", function () {
   afterEach(async () => {
-    if (await isContainerRunning("localfhenix")) {
+    if (isContainerRunning("localfhenix")) {
       stopLocalFhenix();
     }
   });

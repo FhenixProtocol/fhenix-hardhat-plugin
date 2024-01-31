@@ -16,7 +16,8 @@
     "fhenix"
   ],
   "config": {
-    "image": "ghcr.io/fhenixprotocol/localfhenix:v0.1.0-beta2"
+    "image": "ghcr.io/fhenixprotocol/localfhenix:v0.1.0-beta2",
+    "container_name": "localfhenix_hh_plugin"
   },
   "scripts": {
     "lint:fix": "prettier --write 'src/**/*.{js,ts}' 'test/**/*.{js,ts}' && tslint --fix --config tslint.json --project tsconfig.json",
@@ -25,7 +26,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "prepublishOnly": "npm run build",
-    "postinstall": "docker rm -f localfhenix 2> /dev/null ; docker pull $npm_package_config_image"
+    "postinstall": "docker rm -f $npm_package_config_container_name 2> /dev/null ; docker pull $npm_package_config_image"
   },
   "files": [
     "dist/src/",
