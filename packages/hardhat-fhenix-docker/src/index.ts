@@ -5,7 +5,7 @@ import {
   FHENIX_DEFAULT_IMAGE,
   LOCALFHENIX_CONTAINER_NAME,
   TASK_FHENIX_DOCKER_STOP,
-  TASK_FHENIX_NODE,
+  TASK_FHENIX_DOCKER_START,
 } from "./const";
 import {
   isContainerRunning,
@@ -21,7 +21,7 @@ task(TASK_FHENIX_DOCKER_STOP, "Stops a LocalFhenix node").setAction(
 );
 
 // Main task of the plugin. It starts the server and listens for requests.
-task(TASK_FHENIX_NODE, "Starts a LocalFhenix node")
+task(TASK_FHENIX_DOCKER_START, "Starts a LocalFhenix node")
   .addOptionalParam(
     "rpc",
     "RPC port to listen on - default: 42069",

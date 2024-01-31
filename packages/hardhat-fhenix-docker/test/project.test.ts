@@ -1,7 +1,7 @@
 import {
   LOCALFHENIX_CONTAINER_NAME,
   TASK_FHENIX_DOCKER_STOP,
-  TASK_FHENIX_NODE,
+  TASK_FHENIX_DOCKER_START,
 } from "../src/const";
 import { isContainerRunning, stopLocalFhenix } from "../src/docker";
 
@@ -27,7 +27,7 @@ describe("Fhenix Docker Tests", function () {
       //   cwd: path.join(__dirname, 'fixture-projects', 'localfhenix'),
       // });
 
-      await this.hre.run(TASK_FHENIX_NODE);
+      await this.hre.run(TASK_FHENIX_DOCKER_START);
 
       await _delay(3000);
 
