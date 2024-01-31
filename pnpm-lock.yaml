@@ -13,53 +13,7 @@ importers:
 
   .: {}
 
-  packages/hardhat-fhenix:
-    dependencies:
-      axios:
-        specifier: ^1.6.5
-        version: 1.6.5
-      fhenixjs:
-        specifier: ^0.1.0-beta.5
-        version: 0.1.0-beta.5
-    devDependencies:
-      '@types/chai':
-        specifier: ^4.1.7
-        version: 4.3.11
-      '@types/mocha':
-        specifier: ^5.2.6
-        version: 5.2.6
-      '@types/node':
-        specifier: ^8.10.38
-        version: 8.10.66
-      chai:
-        specifier: ^4.2.0
-        version: 4.4.1
-      hardhat:
-        specifier: ^2.0.0
-        version: 2.19.4(ts-node@8.10.2)(typescript@4.9.5)
-      mocha:
-        specifier: ^7.1.2
-        version: 7.2.0
-      prettier:
-        specifier: 2.0.5
-        version: 2.0.5
-      ts-node:
-        specifier: ^8.1.0
-        version: 8.10.2(typescript@4.9.5)
-      tslint:
-        specifier: ^5.16.0
-        version: 5.20.1(typescript@4.9.5)
-      tslint-config-prettier:
-        specifier: ^1.18.0
-        version: 1.18.0
-      tslint-plugin-prettier:
-        specifier: ^2.0.1
-        version: 2.3.0(prettier@2.0.5)(tslint@5.20.1)
-      typescript:
-        specifier: ^4.0.3
-        version: 4.9.5
-
-  packages/hardhat-fhenix-docker:
+  packages/fhenix-hardhat-docker:
     dependencies:
       chalk:
         specifier: ^4.1.2
@@ -101,6 +55,52 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+
+  packages/fhenix-hardhat-plugin:
+    dependencies:
+      axios:
+        specifier: ^1.6.5
+        version: 1.6.5
+      fhenixjs:
+        specifier: ^0.1.0-beta.5
+        version: 0.1.0-beta.5
+    devDependencies:
+      '@types/chai':
+        specifier: ^4.1.7
+        version: 4.3.11
+      '@types/mocha':
+        specifier: ^5.2.6
+        version: 5.2.7
+      '@types/node':
+        specifier: ^8.10.38
+        version: 8.10.66
+      chai:
+        specifier: ^4.2.0
+        version: 4.4.1
+      hardhat:
+        specifier: ^2.0.0
+        version: 2.19.4(ts-node@8.10.2)(typescript@4.9.5)
+      mocha:
+        specifier: ^7.1.2
+        version: 7.2.0
+      prettier:
+        specifier: 2.0.5
+        version: 2.0.5
+      ts-node:
+        specifier: ^8.1.0
+        version: 8.10.2(typescript@4.9.5)
+      tslint:
+        specifier: ^5.16.0
+        version: 5.20.1(typescript@4.9.5)
+      tslint-config-prettier:
+        specifier: ^1.18.0
+        version: 1.18.0
+      tslint-plugin-prettier:
+        specifier: ^2.0.1
+        version: 2.3.0(prettier@2.0.5)(tslint@5.20.1)
+      typescript:
+        specifier: ^4.0.3
+        version: 4.9.5
 
 packages:
 
@@ -882,10 +882,6 @@ packages:
 
   /@types/lru-cache@5.1.1:
     resolution: {integrity: sha512-ssE3Vlrys7sdIzs5LOxCzTVMsU7i9oa/IaW92wF32JFb3CVczqOkru2xspuKczHEbG3nvmPY7IFqVmGGHdNbYw==}
-    dev: true
-
-  /@types/mocha@5.2.6:
-    resolution: {integrity: sha512-1axi39YdtBI7z957vdqXI4Ac25e7YihYQtJa+Clnxg1zTJEaIRbndt71O3sP4GAMgiAm0pY26/b9BrY4MR/PMw==}
     dev: true
 
   /@types/mocha@5.2.7:
@@ -1756,7 +1752,6 @@ packages:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
     dev: true
-    bundledDependencies: false
 
   /evp_bytestokey@1.0.3:
     resolution: {integrity: sha512-/f2Go4TognH/KvCISP7OUsHn85hT9nUkxxA9BEWxFn+Oj9o8ZNLm/40hdlgSLyuOimsrTKLUMEorQexp/aPQeA==}
@@ -1947,7 +1942,7 @@ packages:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.1.2
+      minimatch: 5.0.1
       once: 1.4.0
       path-is-absolute: 1.0.1
     dev: true
@@ -1958,7 +1953,7 @@ packages:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.1.2
+      minimatch: 5.0.1
       once: 1.4.0
       path-is-absolute: 1.0.1
     dev: true
@@ -3407,7 +3402,7 @@ packages:
       lines-and-columns: 1.2.4
       prettier: 2.0.5
       tslib: 1.14.1
-      tslint: 5.20.1(typescript@4.9.5)
+      tslint: 5.20.1(typescript@5.3.3)
     dev: true
 
   /tslint@5.20.1(typescript@4.9.5):
@@ -3424,7 +3419,7 @@ packages:
       diff: 4.0.2
       glob: 7.2.3
       js-yaml: 3.14.1
-      minimatch: 3.1.2
+      minimatch: 5.0.1
       mkdirp: 0.5.6
       resolve: 1.22.8
       semver: 5.7.2
@@ -3447,7 +3442,7 @@ packages:
       diff: 4.0.2
       glob: 7.2.3
       js-yaml: 3.14.1
-      minimatch: 3.1.2
+      minimatch: 5.0.1
       mkdirp: 0.5.6
       resolve: 1.22.8
       semver: 5.7.2
