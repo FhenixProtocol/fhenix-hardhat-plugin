@@ -4,7 +4,7 @@ on:
     tags:
       - "**"
 jobs:
-  publish:
+  npm-publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,3 +21,11 @@ jobs:
       - run: pnpm install
       - run: pnpm build
       - run: pnpm run publish
+
+  github-release:
+    needs: [npm-publish]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
