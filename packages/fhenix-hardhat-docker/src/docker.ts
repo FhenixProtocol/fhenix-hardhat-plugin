@@ -29,8 +29,11 @@ export const doesImageExist = (image: string): boolean => {
   let stdout = "";
   try {
     stdout = execSync(`docker images`).toString();
-    console.log(`stdout: ${stdout}`);
-    return stdout.includes(containerName) && stdout.includes(containerTag);
+    return !!stdout
+      .split("\n")
+      .find(
+        (line) => line.includes(containerName) && line.includes(containerTag),
+      );
   } catch (error) {
     return false;
   }

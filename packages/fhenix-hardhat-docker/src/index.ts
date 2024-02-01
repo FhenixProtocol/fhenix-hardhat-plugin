@@ -22,7 +22,7 @@ task(TASK_FHENIX_DOCKER_STOP, "Stops a LocalFhenix node").setAction(
   },
 );
 
-subtask(SUBTASK_FHENIX_DOCKER_PULL, "Stops a LocalFhenix node")
+subtask(SUBTASK_FHENIX_DOCKER_PULL, "Pulls the latest LocalFhenix image")
   .addOptionalParam("image", "Specified docker image to pull", undefined)
   .setAction(async ({ image }: { image: string }) => {
     pullDockerContainer(image || FHENIX_DEFAULT_IMAGE);
