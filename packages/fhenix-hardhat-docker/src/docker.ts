@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import { execSync, spawn } from "child_process";
 
 import { LOCALFHENIX_CONTAINER_NAME } from "./const";
@@ -7,6 +8,50 @@ interface Container {
   ports: string;
   image: string;
 }
+
+export const isDockerInstalled = (): boolean => {
+  let stdout = "";
+  try {
+    stdout = execSync(`docker -v`).toString();
+    return !!stdout;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const doesImageExist = (image: string): boolean => {
+  if (image.split(":").length !== 2) {
+    return false;
+  }
+
+  const [containerName, containerTag] = image.split(":");
+
+  let stdout = "";
+  try {
+    stdout = execSync(`docker images`).toString();
+    console.log(`stdout: ${stdout}`);
+    return stdout.includes(containerName) && stdout.includes(containerTag);
+  } catch (error) {
+    return false;
+  }
+};
+
+export const pullDockerContainer = (image: string) => {
+  if (doesImageExist(image)) {
+    return;
+  }
+
+  console.info(chalk.green(`Downloading docker image ${image}...`));
+
+  try {
+    const commandToRun = `docker pull ${image}`;
+    execSync(commandToRun);
+    console.info(chalk.green("done!"));
+    // spawn("/usr/bin/env", commandToRun.split(" "));
+  } catch (error) {
+    return false;
+  }
+};
 
 export const isContainerRunning = (name: string) => {
   let stdout = "";

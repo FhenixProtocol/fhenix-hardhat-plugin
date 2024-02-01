@@ -1,14 +1,16 @@
 import chalk from "chalk";
-import { task, types } from "hardhat/config";
+import { subtask, task, types } from "hardhat/config";
 
 import {
   FHENIX_DEFAULT_IMAGE,
   LOCALFHENIX_CONTAINER_NAME,
+  SUBTASK_FHENIX_DOCKER_PULL,
   TASK_FHENIX_DOCKER_START,
   TASK_FHENIX_DOCKER_STOP,
 } from "./const";
 import {
   isContainerRunning,
+  pullDockerContainer,
   runLocalFhenixSeparateProcess,
   stopLocalFhenix,
 } from "./docker";
@@ -19,6 +21,12 @@ task(TASK_FHENIX_DOCKER_STOP, "Stops a LocalFhenix node").setAction(
     console.info(chalk.green("Successfully shut down LocalFhenix"));
   },
 );
+
+subtask(SUBTASK_FHENIX_DOCKER_PULL, "Stops a LocalFhenix node")
+  .addOptionalParam("image", "Specified docker image to pull", undefined)
+  .setAction(async ({ image }: { image: string }) => {
+    pullDockerContainer(image || FHENIX_DEFAULT_IMAGE);
+  });
 
 // Main task of the plugin. It starts the server and listens for requests.
 task(TASK_FHENIX_DOCKER_START, "Starts a LocalFhenix node")
@@ -68,6 +76,8 @@ task(TASK_FHENIX_DOCKER_START, "Starts a LocalFhenix node")
         console.log(chalk.yellow(`LocalFhenix container is already running`));
         return;
       }
+
+      await run(SUBTASK_FHENIX_DOCKER_PULL, { image });
 
       await runLocalFhenixSeparateProcess(rpc, ws, faucet, image);
       console.info(
