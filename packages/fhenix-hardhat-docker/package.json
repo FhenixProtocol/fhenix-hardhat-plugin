@@ -25,8 +25,7 @@
     "test": "mocha --exit --recursive --timeout 60000 'test/*.test.ts'",
     "build": "tsc",
     "watch": "tsc -w",
-    "prepublishOnly": "npm run build",
-    "postinstall": "docker rm -f $npm_package_config_container_name 2> /dev/null ; docker pull $npm_package_config_image"
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "dist/src/",
