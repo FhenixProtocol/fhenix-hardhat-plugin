@@ -1,6 +1,6 @@
 {
   "name": "fhenix-hardhat-plugin",
-  "version": "0.1.0-beta.10",
+  "version": "0.1.0-beta.11",
   "description": "Hardhat TypeScript plugin boilerplate",
   "repository": "github:FhenixProtocol/fhenix-hardhat-plugin",
   "author": "Fhe Labs",
