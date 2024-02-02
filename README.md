@@ -1,4 +1,11 @@
-# Fhenix Hardhat Plugin
+# Fhenix Hardhat Plugin [![NPM Package][npm-badge]][npm] [![Github Actions][gha-badge]][gha] [![License: MIT][license-badge]][license]
+
+[npm]: https://www.npmjs.org/package/fhenix-hardhat-plugin
+[npm-badge]: https://img.shields.io/npm/v/fhenix-hardhat-plugin.svg
+[gha]: https://github.com/fhenixprotocol/fhenix-hardhat-plugin/actions
+[gha-badge]: https://github.com/fhenixprotocol/fhenix-hardhat-plugin/actions/workflows/test.yml/badge.svg
+[license]: https://opensource.org/licenses/MIT
+[license-badge]: https://img.shields.io/badge/License-MIT-blue.svg
 
 Fhenix Hardhat Plugin is designed to extend your Hardhat environment with additional capabilities focused on Fhenix. It integrates seamlessly with your Hardhat projects to provide a local Fhenix environment, including customized network configuration and utilities for managing funds and permits within your blockchain applications.
 
