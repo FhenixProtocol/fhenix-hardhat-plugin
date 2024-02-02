@@ -50,12 +50,7 @@ task(TASK_FHENIX_DOCKER_START, "Starts a LocalFhenix node")
     42000,
     types.int,
   )
-  .addOptionalParam(
-    "image",
-    `Fhenix image to use - default: ${FHENIX_DEFAULT_IMAGE}`,
-    FHENIX_DEFAULT_IMAGE,
-    types.string,
-  )
+  .addOptionalParam("image", `Fhenix image to use`, undefined, types.string)
   // .addOptionalParam('log', 'Log filter level (error, warn, info, debug) - default: info', undefined, types.string)
   .setAction(
     async (
