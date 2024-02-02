@@ -1,8 +1,10 @@
 import chalk from "chalk";
 import { subtask, task, types } from "hardhat/config";
+import os from "os";
 
 import {
   FHENIX_DEFAULT_IMAGE,
+  FHENIX_DEFAULT_IMAGE_ARM,
   LOCALFHENIX_CONTAINER_NAME,
   SUBTASK_FHENIX_DOCKER_PULL,
   TASK_FHENIX_DOCKER_START,
@@ -25,7 +27,7 @@ task(TASK_FHENIX_DOCKER_STOP, "Stops a LocalFhenix node").setAction(
 subtask(SUBTASK_FHENIX_DOCKER_PULL, "Pulls the latest LocalFhenix image")
   .addOptionalParam("image", "Specified docker image to pull", undefined)
   .setAction(async ({ image }: { image: string }) => {
-    pullDockerContainer(image || FHENIX_DEFAULT_IMAGE);
+    pullDockerContainer(image);
   });
 
 // Main task of the plugin. It starts the server and listens for requests.
@@ -75,6 +77,12 @@ task(TASK_FHENIX_DOCKER_START, "Starts a LocalFhenix node")
       if (isContainerRunning(LOCALFHENIX_CONTAINER_NAME)) {
         console.log(chalk.yellow(`LocalFhenix container is already running`));
         return;
+      }
+
+      if (os.arch() === "arm64") {
+        image = image || FHENIX_DEFAULT_IMAGE_ARM;
+      } else {
+        image = image || FHENIX_DEFAULT_IMAGE;
       }
 
       await run(SUBTASK_FHENIX_DOCKER_PULL, { image });

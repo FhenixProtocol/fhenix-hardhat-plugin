@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
@@ -1938,7 +1938,7 @@ packages:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 5.0.1
+      minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
     dev: true
@@ -1949,7 +1949,7 @@ packages:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 5.0.1
+      minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
     dev: true
@@ -3332,7 +3332,7 @@ packages:
       diff: 4.0.2
       glob: 7.2.3
       js-yaml: 3.14.1
-      minimatch: 5.0.1
+      minimatch: 3.1.2
       mkdirp: 0.5.6
       resolve: 1.22.8
       semver: 5.7.2
