@@ -88,6 +88,7 @@ task(TASK_FHENIX_DOCKER_START, "Starts a LocalFhenix node")
           chalk.green(`Started LocalFhenix successfully at 127.0.0.1:${rpc}`),
         );
       } else {
+        // TODO add detailed error message
         console.error("Failed to start LocalFhenix");
       }
     },

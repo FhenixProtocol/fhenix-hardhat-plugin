@@ -56,7 +56,7 @@ export const pullDockerContainer = (image: string) => {
   }
 };
 
-export const isContainerRunning = (name: string) => {
+export const isContainerRunning = (name: string): boolean => {
   let stdout = "";
   try {
     // Using spawnSync because Windows doesn't like it when we use parentheses with execSync
