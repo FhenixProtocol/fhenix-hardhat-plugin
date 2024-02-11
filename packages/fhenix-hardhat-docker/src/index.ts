@@ -83,8 +83,12 @@ task(TASK_FHENIX_DOCKER_START, "Starts a LocalFhenix node")
       await run(SUBTASK_FHENIX_DOCKER_PULL, { image });
 
       await runLocalFhenixSeparateProcess(rpc, ws, faucet, image);
-      console.info(
-        chalk.green(`Started LocalFhenix successfully at 127.0.0.1:${rpc}`),
-      );
+      if (isContainerRunning(LOCALFHENIX_CONTAINER_NAME)) {
+        console.info(
+          chalk.green(`Started LocalFhenix successfully at 127.0.0.1:${rpc}`),
+        );
+      } else {
+        console.error("Failed to start LocalFhenix");
+      }
     },
   );
