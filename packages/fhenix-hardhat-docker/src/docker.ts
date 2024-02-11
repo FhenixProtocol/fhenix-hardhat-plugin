@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { execSync, spawn } from "child_process";
+import { execSync, spawnSync } from "child_process";
 
 import { LOCALFHENIX_CONTAINER_NAME } from "./const";
 
@@ -59,9 +59,13 @@ export const pullDockerContainer = (image: string) => {
 export const isContainerRunning = (name: string) => {
   let stdout = "";
   try {
-    stdout = execSync(
-      `docker ps -a --format '{"name": "{{ .Names }}", "ports": "{{ .Ports }}", "image": "{{ .Image }}"}'`,
-    ).toString();
+    // Using spawnSync because Windows doesn't like it when we use parentheses with execSync
+    stdout = spawnSync("docker", [
+      "ps",
+      "-a",
+      "--format",
+      '{"name": "{{ .Names }}", "ports": "{{ .Ports }}", "image": "{{ .Image }}"}',
+    ]).stdout?.toString();
   } catch (error) {
     return false;
   }
