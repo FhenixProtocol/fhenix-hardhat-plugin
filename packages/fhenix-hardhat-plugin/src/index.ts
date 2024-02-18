@@ -93,11 +93,11 @@ task(TASK_FHENIX_USE_FAUCET, "Fund an account from the faucet")
 
           const wallet = Wallet.fromPhrase(mnemonic)
             .derivePath(networkObject.path)
-            .deriveChild(networkObject.initialIndex);
+            .deriveChild(account || networkObject.initialIndex);
           foundAddress = wallet.address;
         } else {
           const accounts = x.accounts as string[];
-          foundAddress = accounts[0];
+          foundAddress = accounts[account || 0];
         }
       }
 
