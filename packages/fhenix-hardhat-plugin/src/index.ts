@@ -1,10 +1,16 @@
-import { extendConfig, extendEnvironment } from "hardhat/config";
+import chalk from "chalk";
+import { Wallet } from "ethers";
+import { extendConfig, extendEnvironment, task, types } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
+import { HttpNetworkConfig, HttpNetworkHDAccountsConfig } from "hardhat/types";
 
+import { getFunds } from "./common";
+import { TASK_FHENIX_USE_FAUCET } from "./const";
 import { FhenixHardhatRuntimeEnvironment } from "./FhenixHardhatRuntimeEnvironment";
+import "./type-extensions";
+
 // This import is needed to let the TypeScript compiler know that it should include your type
 // extensions in your npm package's types file.
-import "./type-extensions";
 
 extendEnvironment((hre) => {
   hre.fhenixjs = lazyObject(() => {
@@ -36,3 +42,79 @@ extendConfig((config, userConfig) => {
     },
   };
 });
+
+// Main task of the plugin. It starts the server and listens for requests.
+task(TASK_FHENIX_USE_FAUCET, "Fund an account from the faucet")
+  .addOptionalParam("address", "Address to fund", undefined, types.string)
+  .addOptionalParam("account", "account number to fund", 0, types.int)
+  .addOptionalParam(
+    "url",
+    "Optional Faucet URL",
+    "http://localhost:42000",
+    types.string,
+  )
+  .setAction(
+    async (
+      {
+        address,
+        account,
+        url,
+      }: // log,
+      {
+        address: string;
+        account: number;
+        url: string;
+      },
+      { network },
+    ) => {
+      if (network.name !== "localfhenix" && !url) {
+        console.info(
+          chalk.yellow(
+            `Programmatic faucet only supported for localfhenix. Please provide a faucet url, or use the public testnet faucet at https://faucet.fhenix.zone`,
+          ),
+        );
+        return;
+      }
+
+      const networkConfig = network.config;
+
+      let foundAddress = "";
+      if (Object(networkConfig).hasOwnProperty("url")) {
+        const x = networkConfig as HttpNetworkConfig;
+        if (x.accounts === "remote") {
+          console.log(
+            chalk.yellow(`Remote network detected, cannot use faucet`),
+          );
+          return;
+        } else if (Object(x.accounts).hasOwnProperty("mnemonic")) {
+          const networkObject = x.accounts as HttpNetworkHDAccountsConfig;
+
+          const mnemonic = networkObject.mnemonic;
+
+          const wallet = Wallet.fromPhrase(mnemonic)
+            .derivePath(networkObject.path)
+            .deriveChild(networkObject.initialIndex);
+          foundAddress = wallet.address;
+        } else {
+          const accounts = x.accounts as string[];
+          foundAddress = accounts[0];
+        }
+      }
+
+      const myAddress = address || foundAddress;
+
+      if (!myAddress) {
+        console.info(chalk.red(`Failed to get address from hardhat`));
+        return;
+      }
+
+      console.info(chalk.green(`Getting funds from faucet for ${myAddress}`));
+
+      try {
+        await getFunds(address);
+        console.info(chalk.green(`Success!`));
+      } catch (e) {
+        console.info(chalk.red(`failed to get funds from faucet: ${e}`));
+      }
+    },
+  );
