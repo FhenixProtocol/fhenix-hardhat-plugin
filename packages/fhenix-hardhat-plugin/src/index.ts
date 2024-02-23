@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { Wallet } from "ethers";
+import { HDNodeWallet, Wallet } from "ethers";
 import { extendConfig, extendEnvironment, task, types } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
 import { HttpNetworkConfig, HttpNetworkHDAccountsConfig } from "hardhat/types";
@@ -25,6 +25,10 @@ extendEnvironment((hre) => {
 });
 
 extendConfig((config, userConfig) => {
+  if (userConfig.networks && userConfig.networks.localfhenix) {
+    return;
+  }
+
   config.networks.localfhenix = {
     gas: "auto",
     gasMultiplier: 1.2,
@@ -91,13 +95,18 @@ task(TASK_FHENIX_USE_FAUCET, "Fund an account from the faucet")
 
           const mnemonic = networkObject.mnemonic;
 
-          const wallet = Wallet.fromPhrase(mnemonic)
-            .derivePath(networkObject.path)
-            .deriveChild(account || networkObject.initialIndex);
+          const path = `${networkObject.path || "m/44'/60'/0'/0"}/${
+            account || networkObject.initialIndex || 0
+          }`;
+
+          const wallet = HDNodeWallet.fromPhrase(mnemonic, "", path);
+
           foundAddress = wallet.address;
         } else {
           const accounts = x.accounts as string[];
-          foundAddress = accounts[account || 0];
+          const privateKey = accounts[account || 0];
+          const wallet = new Wallet(privateKey);
+          foundAddress = wallet.address;
         }
       }
 
@@ -111,10 +120,14 @@ task(TASK_FHENIX_USE_FAUCET, "Fund an account from the faucet")
       console.info(chalk.green(`Getting funds from faucet for ${myAddress}`));
 
       try {
-        await getFunds(address);
+        await getFunds(myAddress, url);
         console.info(chalk.green(`Success!`));
       } catch (e) {
-        console.info(chalk.red(`failed to get funds from faucet: ${e}`));
+        console.info(
+          chalk.red(
+            `failed to get funds from faucet @ ${url} for ${address}: ${e}`,
+          ),
+        );
       }
     },
   );
