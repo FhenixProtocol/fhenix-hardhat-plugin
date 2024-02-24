@@ -2,6 +2,7 @@
 import { assert, expect } from "chai";
 import { EncryptedUint8 } from "fhenixjs";
 
+import { TASK_FHENIX_USE_FAUCET } from "../src/const";
 import { FhenixHardhatRuntimeEnvironment } from "../src/FhenixHardhatRuntimeEnvironment";
 
 import { useEnvironment } from "./helpers";
@@ -41,6 +42,15 @@ describe("Test Fhenix Plugin", function () {
 
     it("checks that fhenixjs methods get injected on localfhenix", function () {
       assert.equal(this.hre.fhenixjs.sayHello(), "hello");
+    });
+  });
+
+  describe("Test Faucet command", async function () {
+    useEnvironment("localfhenix");
+    // todo: add a test that mocks the fhenixjs client and checks that the plugin works
+
+    it("checks that the faucet works", async function () {
+      await this.hre.run(TASK_FHENIX_USE_FAUCET);
     });
   });
 });

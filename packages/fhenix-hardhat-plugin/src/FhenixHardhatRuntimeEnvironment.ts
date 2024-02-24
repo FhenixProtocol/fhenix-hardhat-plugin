@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   FhenixClient,
   getPermit,
@@ -6,6 +5,8 @@ import {
   SupportedProvider,
 } from "fhenixjs";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
+
+import { getFunds } from "./common";
 
 interface FhenixHardhatRuntimeEnvironmentConfig {
   rpcPort: number;
@@ -37,21 +38,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
   }
 
   public async getFunds(address: string) {
-    const response = await axios.get(
-      `http://localhost:${this.config.faucetPort}/faucet?address=${address}`,
-    );
-
-    if (response.status !== 200) {
-      throw new Error(
-        `Failed to get funds from faucet: ${response.status}: ${response.statusText}`,
-      );
-    }
-
-    if (!response.data?.message?.includes("ETH successfully sent to address")) {
-      throw new Error(
-        `Failed to get funds from faucet: ${JSON.stringify(response.data)}`,
-      );
-    }
+    await getFunds(address, `http://localhost:${this.config.faucetPort}`);
   }
 
   public async createPermit(
