@@ -2,10 +2,10 @@
 import { assert, expect } from "chai";
 import { EncryptedUint8 } from "fhenixjs";
 
+import { TASK_FHENIX_USE_FAUCET } from "../src/const";
 import { FhenixHardhatRuntimeEnvironment } from "../src/FhenixHardhatRuntimeEnvironment";
 
 import { useEnvironment } from "./helpers";
-import { TASK_FHENIX_USE_FAUCET } from "../src/const";
 
 describe("Test Fhenix Plugin", function () {
   describe("Test Runtime with default project", function () {
