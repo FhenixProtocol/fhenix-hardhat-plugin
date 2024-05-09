@@ -54,7 +54,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     if (!permit) {
       return;
     }
-    
+
     this.storePermit(permit);
     return permit;
   }
