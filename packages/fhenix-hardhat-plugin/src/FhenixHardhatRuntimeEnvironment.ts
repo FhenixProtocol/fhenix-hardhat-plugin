@@ -50,6 +50,11 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     }
 
     const permit = await getPermit(contractAddress, provider || this.provider!);
+
+    if (!permit) {
+      return;
+    }
+    
     this.storePermit(permit);
     return permit;
   }
