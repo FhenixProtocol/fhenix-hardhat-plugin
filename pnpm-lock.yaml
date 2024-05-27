@@ -68,8 +68,8 @@ importers:
         specifier: ^6.0.0
         version: 6.10.0
       fhenixjs:
-        specifier: ^0.2.0-beta.3
-        version: 0.2.0-beta.3
+        specifier: ^0.2.0-beta.4
+        version: 0.2.0-beta.4
     devDependencies:
       '@types/chai':
         specifier: ^4.1.7
@@ -1766,8 +1766,8 @@ packages:
     resolution: {integrity: sha512-VxPP4NqbUjj6MaAOafWeUn2cXWLcCtljklUtZf0Ind4XQ+QPtmA0b18zZy0jIQx+ExRVCR/ZQpBmik5lXshNsw==}
     dev: true
 
-  /fhenixjs@0.2.0-beta.3:
-    resolution: {integrity: sha512-qCJ1t6qbkm4HeNwX5ZJwm97zjDQiq8RJ22wW7gW3Cr9ROu0W8B6fWh/ufQJXFptmMAI9DSjPeNgt2oqHDDuydQ==}
+  /fhenixjs@0.2.0-beta.4:
+    resolution: {integrity: sha512-N+PgOWI19sBzJO0S6CzS4k7iDq7pmQx1DncZTsIN5AqsYBUt1Toakd8WAnvhoLXQlWi7BOnXHTo7UHVIayQA4Q==}
     dependencies:
       ethers: 6.10.0
       node-tfhe: 0.6.1
