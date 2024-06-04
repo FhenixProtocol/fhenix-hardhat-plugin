@@ -52,6 +52,9 @@ export const pullDockerContainer = (image: string) => {
     console.info(chalk.green("done!"));
     // spawn("/usr/bin/env", commandToRun.split(" "));
   } catch (error) {
+    console.info(
+      chalk.red("Failed to pull image. Is docker installed and running?"),
+    );
     return false;
   }
 };
