@@ -67,7 +67,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
 export class MockProvider {
   public async send(
     method: string,
-    params: any[] | Record<string, any>,
+    params: any[] | unknown,
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       reject("provider not initialized");
