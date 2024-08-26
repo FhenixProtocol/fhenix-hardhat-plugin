@@ -8,19 +8,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18.x
-      - uses: pnpm/action-setup@v3
+          node-version: 20.x
+      - uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 9
       - name: Set publishing config
         run: pnpm config set '//registry.npmjs.org/:_authToken' "${NODE_AUTH_TOKEN}"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: pnpm install
       - run: pnpm build
-      - run: pnpm run publish
+      - name: Read package version
+        id: package_version
+        run: echo "VERSION=$(jq -r .version < ./package.json)" >> $GITHUB_ENV
+
+      - name: Determine prerelease tag
+        id: prerelease_check
+        run: |
+          if [[ "${{ env.VERSION }}" =~ \-(alpha|beta)\.[0-9]+$ ]]; then
+            echo "PRERELEASE=--tag beta" >> $GITHUB_ENV
+          else
+            echo "PRERELEASE=" >> $GITHUB_ENV
+          fi
+      - run: pnpm run publish ${{ env.PRERELEASE }}
 
   github-release:
     needs: [npm-publish]
