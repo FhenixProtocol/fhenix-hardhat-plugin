@@ -19,16 +19,11 @@ describe("Test Fhenix Plugin", function () {
       assert.equal(this.hre.fhenixjs.sayHello(), "hello");
     });
 
-    it("checks that client doesn't work on a non-fhe chain", async function () {
-      let err: Error | EncryptedUint8;
-      try {
-        err = await this.hre.fhenixjs.encrypt_uint8(1);
-      } catch (e) {
-        // @ts-ignore
-        err = e;
-      }
-      expect(err).to.be.an("error");
-      expect(err.toString()).to.include("initializing fhenixjs");
+    it("checks that client works on hardhat with transparent operation", async function () {
+      expect(this.hre.fhenixjs.network).to.be.equal("hardhat");
+      const fakeEnc = await this.hre.fhenixjs.encrypt_uint8(1);
+      expect(fakeEnc).to.be.an("object");
+      expect(fakeEnc).to.have.property("data");
     });
   });
 
