@@ -24,7 +24,6 @@ describe("Test Fhenix Plugin", function () {
       const fakeEnc = await this.hre.fhenixjs.encrypt_uint8(1);
       expect(fakeEnc).to.be.an("object");
       expect(fakeEnc).to.have.property("data");
-      expect(fakeEnc).to.have.property("securityZone");
     });
   });
 

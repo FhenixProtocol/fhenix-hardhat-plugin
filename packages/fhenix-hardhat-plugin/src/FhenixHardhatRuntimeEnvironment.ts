@@ -51,132 +51,101 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     }
   }
 
-  // public useHardhatNetwork() {
-  //   this.network = "hardhat";
-  // }
-  //
-  // public useFhenix() {
-  //   this.network = "fhenix";
-  // }
-  //
-  public async encrypt_uint8(
-    value: number,
-    securityZone?: number | undefined,
-  ): Promise<EncryptedUint8> {
+  public async encrypt_uint8(value: number): Promise<EncryptedUint8> {
     if (this.network === "hardhat") {
       const data = bigintToUint8Array(BigInt(value));
 
       return {
         data,
-        securityZone: securityZone || 0,
       };
     } else {
-      return super.encrypt_uint8(value, securityZone);
+      return super.encrypt_uint8(value);
     }
   }
 
-  public async encrypt_uint16(
-    value: number,
-    securityZone?: number | undefined,
-  ): Promise<EncryptedUint16> {
+  public async encrypt_uint16(value: number): Promise<EncryptedUint16> {
     if (this.network === "hardhat") {
       const data = bigintToUint8Array(BigInt(value));
 
       return {
         data,
-        securityZone: securityZone || 0,
       };
     } else {
-      return super.encrypt_uint16(value, securityZone);
+      return super.encrypt_uint16(value);
     }
   }
 
-  public async encrypt_uint32(
-    value: number,
-    securityZone?: number | undefined,
-  ): Promise<EncryptedUint32> {
+  public async encrypt_uint32(value: number): Promise<EncryptedUint32> {
     if (this.network === "hardhat") {
       const data = bigintToUint8Array(BigInt(value));
 
       return {
         data,
-        securityZone: securityZone || 0,
       };
     } else {
-      return super.encrypt_uint32(value, securityZone);
+      return super.encrypt_uint32(value);
     }
   }
 
   public async encrypt_uint64(
     value: string | bigint,
-    securityZone?: number | undefined,
   ): Promise<EncryptedUint64> {
     if (this.network === "hardhat") {
       const data = bigintToUint8Array(BigInt(value));
 
       return {
         data,
-        securityZone: securityZone || 0,
       };
     } else {
-      return super.encrypt_uint64(value, securityZone);
+      return super.encrypt_uint64(value);
     }
   }
 
   public async encrypt_uint128(
     value: string | bigint,
-    securityZone?: number | undefined,
   ): Promise<EncryptedUint128> {
     if (this.network === "hardhat") {
       const data = bigintToUint8Array(BigInt(value));
 
       return {
         data,
-        securityZone: securityZone || 0,
       };
     } else {
-      return super.encrypt_uint128(value, securityZone);
+      return super.encrypt_uint128(value);
     }
   }
 
   public async encrypt_uint256(
     value: string | bigint,
-    securityZone?: number | undefined,
   ): Promise<EncryptedUint256> {
     if (this.network === "hardhat") {
       const data = bigintToUint8Array(BigInt(value));
 
       return {
         data,
-        securityZone: securityZone || 0,
       };
     } else {
-      return super.encrypt_uint256(value, securityZone);
+      return super.encrypt_uint256(value);
     }
   }
 
-  public async encrypt_bool(
-    value: boolean,
-    securityZone?: number | undefined,
-  ): Promise<EncryptedBool> {
+  public async encrypt_bool(value: boolean): Promise<EncryptedBool> {
     if (this.network === "hardhat") {
       if (value) {
         const data = bigintToUint8Array(BigInt(1));
 
         return {
           data,
-          securityZone: securityZone || 0,
         };
       } else {
         const data = bigintToUint8Array(BigInt(0));
 
         return {
           data,
-          securityZone: securityZone || 0,
         };
       }
     } else {
-      return super.encrypt_bool(value, securityZone);
+      return super.encrypt_bool(value);
     }
   }
 
