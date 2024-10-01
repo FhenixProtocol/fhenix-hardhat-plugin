@@ -60,7 +60,7 @@
     "chalk": "^4.1.2"
   },
   "peerDependencies": {
-    "hardhat": "^2.0.0",
+    "hardhat": "^2.11.0",
     "@fhenixprotocol/contracts": "^0.3.0-alpha.2"
   }
 }
