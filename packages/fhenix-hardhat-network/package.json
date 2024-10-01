@@ -46,6 +46,7 @@
     "ethers": "^6.13.2",
     "hardhat": "^2.11.0",
     "hardhat-gas-reporter": "^1.0.10",
+    "hardhat-dependency-compiler": "^1.2.1",
     "mocha": "^10.4.0",
     "prettier": "2.0.5",
     "solidity-coverage": "^0.8.12",
