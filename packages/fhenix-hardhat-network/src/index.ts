@@ -22,8 +22,6 @@ const compilePaths = async (hre: HardhatRuntimeEnvironment) => {
   // other packages may incorrectly set a relative sources path so it must be explicitly resolved
   const sources = path.resolve(hre.config.paths.sources);
 
-  console.log({ sources }, hre.config.paths.sources);
-
   const directory = path.resolve(sources, pluginName);
   const tracker = path.resolve(directory, `.${pluginName}`);
 
@@ -88,7 +86,6 @@ task(
     await compilePaths(hre);
 
     const MockFheOpsArtifact = await hre.artifacts.readArtifact("MockFheOps");
-    console.log({ artifact: MockFheOpsArtifact });
 
     await hre.network.provider.send("hardhat_setCode", [
       "0x0000000000000000000000000000000000000080",

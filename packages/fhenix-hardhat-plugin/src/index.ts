@@ -2,7 +2,11 @@ import chalk from "chalk";
 import { HDNodeWallet, Wallet } from "ethers";
 import { extendConfig, extendEnvironment, task, types } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
-import { HttpNetworkConfig, HttpNetworkHDAccountsConfig } from "hardhat/types";
+import {
+  HardhatNetworkHDAccountsConfig,
+  HttpNetworkConfig,
+  HttpNetworkHDAccountsConfig,
+} from "hardhat/types";
 
 import { getFunds } from "./common";
 import { TASK_FHENIX_USE_FAUCET } from "./const";
@@ -42,7 +46,8 @@ extendConfig((config, userConfig) => {
       path: "m/44'/60'/0'/0",
       initialIndex: 0,
       count: 20,
-    },
+      accountsBalance: "10000000000000000000",
+    } as HardhatNetworkHDAccountsConfig,
   };
 });
 
