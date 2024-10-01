@@ -101,9 +101,6 @@ importers:
       hardhat:
         specifier: ^2.11.0
         version: 2.11.0(ts-node@10.8.0(@types/node@18.15.13)(typescript@5.3.3))(typescript@5.3.3)
-      hardhat-dependency-compiler:
-        specifier: ^1.2.1
-        version: 1.2.1(hardhat@2.11.0(ts-node@10.8.0(@types/node@18.15.13)(typescript@5.3.3))(typescript@5.3.3))
       hardhat-gas-reporter:
         specifier: ^1.0.10
         version: 1.0.10(hardhat@2.11.0(ts-node@10.8.0(@types/node@18.15.13)(typescript@5.3.3))(typescript@5.3.3))
@@ -1561,12 +1558,6 @@ packages:
     resolution: {integrity: sha512-vafaFqs8MZkRrSX7sFVUdo3ap/eNiLnb4IakshzvP56X5Nr1iGKAIqdX6tMlm6HcNRIkr6AxO5jFEoJzzpT8aQ==}
     engines: {node: '>=0.4.7'}
     hasBin: true
-
-  hardhat-dependency-compiler@1.2.1:
-    resolution: {integrity: sha512-xG5iwbspTtxOEiP5UsPngEYQ1Hg+fjTjliapIjdTQmwGkCPofrsDhQDV2O/dopcYzcR68nTx2X8xTewYHgA2rQ==}
-    engines: {node: '>=14.14.0'}
-    peerDependencies:
-      hardhat: ^2.0.0
 
   hardhat-gas-reporter@1.0.10:
     resolution: {integrity: sha512-02N4+So/fZrzJ88ci54GqwVA3Zrf0C9duuTyGt0CFRIh/CdNwbnTgkXkRfojOMLBQ+6t+lBIkgbsOtqMvNwikA==}
@@ -4854,10 +4845,6 @@ snapshots:
       wordwrap: 1.0.0
     optionalDependencies:
       uglify-js: 3.19.2
-
-  hardhat-dependency-compiler@1.2.1(hardhat@2.11.0(ts-node@10.8.0(@types/node@18.15.13)(typescript@5.3.3))(typescript@5.3.3)):
-    dependencies:
-      hardhat: 2.11.0(ts-node@10.8.0(@types/node@18.15.13)(typescript@5.3.3))(typescript@5.3.3)
 
   hardhat-gas-reporter@1.0.10(hardhat@2.11.0(ts-node@10.8.0(@types/node@18.15.13)(typescript@5.3.3))(typescript@5.3.3)):
     dependencies:
