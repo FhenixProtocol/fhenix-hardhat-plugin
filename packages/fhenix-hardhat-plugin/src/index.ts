@@ -47,7 +47,7 @@ extendConfig((config, userConfig) => {
       initialIndex: 0,
       count: 20,
       accountsBalance: "10000000000000000000",
-    } as HardhatNetworkHDAccountsConfig,
+    },
   };
 });
 

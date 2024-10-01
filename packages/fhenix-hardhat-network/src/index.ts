@@ -1,9 +1,9 @@
+import fs from "fs";
 import { TASK_TEST } from "hardhat/builtin-tasks/task-names";
 import { task } from "hardhat/config";
 import { HARDHAT_NETWORK_NAME, HardhatPluginError } from "hardhat/plugins";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import path from "path";
-import fs from "fs";
 
 const paths = ["@fhenixprotocol/contracts/utils/debug/MockFheOps.sol"];
 const pluginName = "fhenix-hardhat-network";
@@ -45,7 +45,7 @@ const compilePaths = async (hre: HardhatRuntimeEnvironment) => {
 
   if (fs.existsSync(directory)) {
     // delete directory only if tracker is found or directory is empty
-    if (fs.existsSync(tracker) || fs.readdirSync(directory).length == 0) {
+    if (fs.existsSync(tracker) || fs.readdirSync(directory).length === 0) {
       fs.rmSync(directory, { recursive: true });
     } else {
       throw new HardhatPluginError(
@@ -61,7 +61,7 @@ const compilePaths = async (hre: HardhatRuntimeEnvironment) => {
     `directory approved for write access by ${pluginName}\n`,
   );
 
-  for (let dependency of paths) {
+  for (const dependency of paths) {
     const fullPath = path.join(directory, dependency);
 
     if (!fs.existsSync(path.dirname(fullPath))) {
