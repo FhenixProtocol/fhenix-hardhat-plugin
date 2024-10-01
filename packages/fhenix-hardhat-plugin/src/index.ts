@@ -2,14 +2,20 @@ import chalk from "chalk";
 import { HDNodeWallet, Wallet } from "ethers";
 import { extendConfig, extendEnvironment, task, types } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
-import {
-  HardhatNetworkHDAccountsConfig,
-  HttpNetworkConfig,
-  HttpNetworkHDAccountsConfig,
-} from "hardhat/types";
+import { HttpNetworkConfig, HttpNetworkHDAccountsConfig } from "hardhat/types";
 
 import { getFunds } from "./common";
-import { TASK_FHENIX_USE_FAUCET } from "./const";
+import {
+  TASK_FHENIX_CHECK_EXPOSED_ENCRYPTED_VARS,
+  TASK_FHENIX_USE_FAUCET,
+} from "./const";
+import {
+  detectExposures,
+  printExposedContracts,
+  printExposureSummary,
+  printExposureCheckIntro,
+  printNoExposureSummary,
+} from "./exposed";
 import { FhenixHardhatRuntimeEnvironment } from "./FhenixHardhatRuntimeEnvironment";
 import "./type-extensions";
 
@@ -137,3 +143,20 @@ task(TASK_FHENIX_USE_FAUCET, "Fund an account from the faucet")
       }
     },
   );
+
+// Main task of the plugin. It starts the server and listens for requests.
+task(
+  TASK_FHENIX_CHECK_EXPOSED_ENCRYPTED_VARS,
+  "Check contracts for exposed encrypted vars (euint8-256, ebool, eaddress)",
+).setAction(async ({}, hre) => {
+  printExposureCheckIntro();
+
+  const contractExposures = await detectExposures(hre);
+
+  if (contractExposures.length === 0) {
+    printNoExposureSummary();
+  } else {
+    console.log(printExposedContracts(contractExposures));
+    printExposureSummary(contractExposures);
+  }
+});
