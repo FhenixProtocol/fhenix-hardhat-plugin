@@ -4,28 +4,22 @@ import { task } from "hardhat/config";
 import { HARDHAT_NETWORK_NAME } from "hardhat/plugins";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
-import MockFheOps from "../artifacts/contracts/MockFheOps.sol/MockFheOps.json";
+import MockFheOps from "../artifacts/@fhenixprotocol/contracts/utils/debug/MockFheOps.sol/MockFheOps.json";
 
 task(
   TASK_TEST,
   "Deploy fhenix mock contracts on hardhat network test",
 ).setAction(async ({}, hre: HardhatRuntimeEnvironment, runSuper) => {
   if (hre.network.name === HARDHAT_NETWORK_NAME) {
-    async function deployTokenFixture() {
-      const mockFheCode = MockFheOps.deployedBytecode;
+    await hre.run("compile");
 
-      await hre.network.provider.send("hardhat_setCode", [
-        "0x0000000000000000000000000000000000000080",
-        mockFheCode,
-      ]);
-    }
-
-    await deployTokenFixture();
+    await hre.network.provider.send("hardhat_setCode", [
+      "0x0000000000000000000000000000000000000080",
+      MockFheOps.deployedBytecode,
+    ]);
 
     console.info(
-      chalk.green(
-        "Successfully deployed Fhenix mock contracts (solc 0.8.20) on hardhat network",
-      ),
+      "Successfully deployed Fhenix mock contracts (solc 0.8.20) on hardhat network",
     );
   }
 
