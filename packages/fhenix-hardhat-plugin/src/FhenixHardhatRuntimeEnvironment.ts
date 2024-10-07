@@ -9,6 +9,7 @@ import {
   FhenixClient,
   getPermit,
   InstanceParams,
+  Permit,
   SupportedProvider,
 } from "fhenixjs";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
@@ -180,12 +181,16 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     }
   }
 
-  public unseal(contractAddress: string, ciphertext: string): bigint {
+  public unseal(
+    contractAddress: string,
+    ciphertext: string,
+    account: string,
+  ): bigint {
     // console.log(`ct: ${ciphertext}`);
     if (this.network === "hardhat") {
       return uint8ArrayToBigint(ciphertext);
     } else {
-      return super.unseal(contractAddress, ciphertext);
+      return super.unseal(contractAddress, ciphertext, account);
     }
   }
 
@@ -196,19 +201,13 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
   public async createPermit(
     contractAddress: string,
     provider?: SupportedProvider,
-  ) {
+  ): Promise<Permit | undefined> {
     if (!provider && this.provider === undefined) {
       throw new Error("no provider provided");
     }
 
     const permit = await getPermit(contractAddress, provider || this.provider!);
-
-    if (!permit) {
-      return;
-    }
-
-    this.storePermit(permit);
-    return permit;
+    return permit ?? undefined;
   }
 
   public sayHello() {
