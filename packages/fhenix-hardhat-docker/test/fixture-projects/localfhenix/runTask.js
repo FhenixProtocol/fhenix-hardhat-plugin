@@ -1,7 +1,4 @@
-// const path = require('path');
-// process.chdir(path.join(__dirname)); 
-
-const hre = require("hardhat");
+import hre from "hardhat";
 
 async function runTask(taskName) {
   await hre.run(taskName);
