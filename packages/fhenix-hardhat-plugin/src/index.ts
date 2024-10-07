@@ -2,7 +2,11 @@ import chalk from "chalk";
 import { HDNodeWallet, Wallet } from "ethers";
 import { extendConfig, extendEnvironment, task, types } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
-import { HttpNetworkConfig, HttpNetworkHDAccountsConfig } from "hardhat/types";
+import {
+  HardhatNetworkHDAccountsConfig,
+  HttpNetworkConfig,
+  HttpNetworkHDAccountsConfig,
+} from "hardhat/types";
 
 import { getFunds } from "./common";
 import {
