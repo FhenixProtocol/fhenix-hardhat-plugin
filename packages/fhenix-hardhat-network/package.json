@@ -1,0 +1,66 @@
+{
+  "name": "fhenix-hardhat-network",
+  "version": "0.2.3-alpha.1",
+  "description": "Hardhat plugin to help support Hardhat Network for FHE contract development",
+  "repository": "github:FhenixProtocol/fhenix-hardhat-network",
+  "author": "Fhe Labs",
+  "license": "MIT",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "keywords": [
+    "ethereum",
+    "smart-contracts",
+    "hardhat",
+    "hardhat-plugin",
+    "fhe",
+    "fhenix"
+  ],
+  "scripts": {
+    "lint:fix": "prettier --write 'src/**/*.{js,ts}' 'test/**/*.{js,ts}' && tslint --fix --config tslint.json --project tsconfig.json",
+    "lint": "tslint --config tslint.json --project tsconfig.json",
+    "test": "mocha --exit --recursive --timeout 60000 'test/*.test.ts'",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist/src",
+    "dist/artifacts",
+    "artifacts/contracts/MockFheOps.sol/MockFheOps.json",
+    "src/",
+    "LICENSE",
+    "README.md",
+    "postinstall.js"
+  ],
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",
+    "@nomicfoundation/hardhat-ethers": "^3.0.7",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.11",
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.9",
+    "@typechain/hardhat": "^9.1.0",
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^9.1.0",
+    "@types/node": ">=18.0.0",
+    "chai": "^4.4.1",
+    "ethers": "^6.13.2",
+    "hardhat": "^2.11.0",
+    "hardhat-gas-reporter": "^1.0.10",
+    "mocha": "^10.4.0",
+    "prettier": "2.0.5",
+    "solidity-coverage": "^0.8.12",
+    "ts-node": "^10.8.0",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.3.0",
+    "typescript": "^5.3.3",
+    "@fhenixprotocol/contracts": "^0.3.0-alpha.2"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2"
+  },
+  "peerDependencies": {
+    "hardhat": "^2.11.0",
+    "@fhenixprotocol/contracts": "^0.3.0-alpha.2"
+  }
+}

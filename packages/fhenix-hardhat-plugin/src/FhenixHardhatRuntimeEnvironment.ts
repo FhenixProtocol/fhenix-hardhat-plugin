@@ -52,14 +52,6 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     }
   }
 
-  // public useHardhatNetwork() {
-  //   this.network = "hardhat";
-  // }
-  //
-  // public useFhenix() {
-  //   this.network = "fhenix";
-  // }
-  //
   public async encrypt_uint8(
     value: number,
     securityZone?: number | undefined,
