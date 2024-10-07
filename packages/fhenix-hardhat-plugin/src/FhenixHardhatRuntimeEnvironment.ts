@@ -150,9 +150,8 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
   }
 
   public unseal(contractAddress: string, ciphertext: string): bigint {
-    // console.log(`ct: ${ciphertext}`);
     if (this.network === "hardhat") {
-      return BigInt(ciphertext);
+      return uint8ArrayToBigint(ciphertext);
     } else {
       return super.unseal(contractAddress, ciphertext);
     }
@@ -201,16 +200,19 @@ export class MockProvider {
     });
   }
 }
-//
-// function bigintToUint8Array(value: bigint): Uint8Array {
-//   const hex = value.toString(16);
-//   const len = Math.ceil(hex.length / 2);
-//   const u8 = new Uint8Array(len);
-//   for (let i = 0; i < len; i++) {
-//     u8[len - i - 1] = parseInt(hex.substr(i * 2, 2), 16);
-//   }
-//   return u8;
-// }
+
+function uint8ArrayToBigint(uint8ArrayStr: string): bigint {
+  const byteArray = new Uint8Array(
+    uint8ArrayStr.split("").map((c) => c.charCodeAt(0)),
+  );
+
+  let result = BigInt(0);
+  for (let i = 0; i < byteArray.length; i++) {
+    result = (result << BigInt(8)) + BigInt(byteArray[i]); // Shift and add each byte
+  }
+
+  return result;
+}
 
 function bigintToUint8Array(bigNum: bigint): Uint8Array {
   const byteLength = 32;
