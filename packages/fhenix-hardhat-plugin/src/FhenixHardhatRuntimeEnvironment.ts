@@ -207,8 +207,8 @@ function uint8ArrayToBigint(uint8ArrayStr: string): bigint {
   );
 
   let result = BigInt(0);
-  for (let i = 0; i < byteArray.length; i++) {
-    result = (result << BigInt(8)) + BigInt(byteArray[i]); // Shift and add each byte
+  for (const byteArrayItem of byteArray) {
+    result = (result << BigInt(8)) + BigInt(byteArrayItem);
   }
 
   return result;
