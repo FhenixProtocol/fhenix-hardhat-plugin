@@ -16,8 +16,7 @@
     "fhenix"
   ],
   "scripts": {
-    "lint:fix": "prettier --write 'src/**/*.{js,ts}' 'test/**/*.{js,ts}' && tslint --fix --config tslint.json --project tsconfig.json",
-    "lint": "tslint --config tslint.json --project tsconfig.json",
+    "lint": "eslint --config ./.eslintrc.json --ignore-path ./.eslintignore ./**/*.ts",
     "test": "mocha --exit --recursive --timeout 60000 'test/*.test.ts'",
     "build": "tsc",
     "watch": "tsc -w",
@@ -33,14 +32,17 @@
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
     "@types/node": "^16.18.76",
+    "@types/eslint": "^8",
     "chai": "^4.2.0",
     "hardhat": "^2.11.0",
     "mocha": "^10.4.0",
     "prettier": "2.0.5",
     "ts-node": "^8.1.0",
-    "tslint": "^5.16.0",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.0.1",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "typescript": "^5.3.3"
   },
   "dependencies": {

@@ -9,7 +9,17 @@ import {
 } from "hardhat/types";
 
 import { getFunds } from "./common";
-import { TASK_FHENIX_USE_FAUCET } from "./const";
+import {
+  TASK_FHENIX_CHECK_EXPOSED_ENCRYPTED_VARS,
+  TASK_FHENIX_USE_FAUCET,
+} from "./const";
+import {
+  detectExposures,
+  printExposedContracts,
+  printExposureSummary,
+  printExposureCheckIntro,
+  printNoExposureSummary,
+} from "./exposed";
 import { FhenixHardhatRuntimeEnvironment } from "./FhenixHardhatRuntimeEnvironment";
 import "./type-extensions";
 
@@ -47,7 +57,6 @@ extendConfig((config, userConfig) => {
       initialIndex: 0,
       count: 20,
       accountsBalance: "10000000000000000000",
-      // @ts-ignore
       passphrase: "",
     },
   };
@@ -137,3 +146,20 @@ task(TASK_FHENIX_USE_FAUCET, "Fund an account from the faucet")
       }
     },
   );
+
+// Main task of the plugin. It starts the server and listens for requests.
+task(
+  TASK_FHENIX_CHECK_EXPOSED_ENCRYPTED_VARS,
+  "Check contracts for exposed encrypted vars (euint8-256, ebool, eaddress)",
+).setAction(async ({}, hre) => {
+  printExposureCheckIntro();
+
+  const contractExposures = await detectExposures(hre);
+
+  if (contractExposures.length === 0) {
+    printNoExposureSummary();
+  } else {
+    console.log(printExposedContracts(contractExposures));
+    printExposureSummary(contractExposures);
+  }
+});
