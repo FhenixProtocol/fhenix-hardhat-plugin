@@ -4369,7 +4369,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 9.0.4
+      minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
 
@@ -4431,10 +4431,6 @@ snapshots:
       wordwrap: 1.0.0
     optionalDependencies:
       uglify-js: 3.19.2
-
-  hardhat-gas-reporter@1.0.10(hardhat@2.11.0(ts-node@10.8.0(@types/node@18.15.13)(typescript@5.3.3))(typescript@5.3.3)):
-    dependencies:
-      hardhat: 2.11.0(ts-node@10.8.0(@types/node@18.15.13)(typescript@5.3.3))(typescript@5.3.3)
 
   hardhat-gas-reporter@1.0.10(hardhat@2.11.0(ts-node@10.8.0(@types/node@18.15.13)(typescript@5.3.3))(typescript@5.3.3)):
     dependencies:
