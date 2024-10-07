@@ -22,7 +22,10 @@ jobs:
       - run: pnpm build
       - name: Read package version
         id: package_version
-        run: echo "VERSION=$(jq -r .version < ./package.json)" >> $GITHUB_ENV
+        run: |
+          version=$(jq -r .version < ./package.json)
+          echo "version: $version"
+          echo "VERSION=$version" >> $GITHUB_ENV
 
       - name: Determine prerelease tag
         id: prerelease_check
