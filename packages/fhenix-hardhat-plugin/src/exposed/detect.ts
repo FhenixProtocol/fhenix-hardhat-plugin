@@ -73,7 +73,7 @@ const detectOutputVulnerability = (outputs: any[]): ExposureItem[] => {
         type: output.internalType,
         position: i,
         children: [],
-        count: 0,
+        count: 1,
       });
     }
   }

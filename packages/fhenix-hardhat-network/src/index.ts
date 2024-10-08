@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import fs from "fs";
 import { TASK_TEST } from "hardhat/builtin-tasks/task-names";
 import { task } from "hardhat/config";
@@ -92,8 +93,12 @@ task(
       MockFheOpsArtifact.deployedBytecode,
     ]);
 
-    console.info(
-      "Successfully deployed Fhenix mock contracts (solc 0.8.20) on hardhat network",
+    console.log(
+      chalk.bold(
+        chalk.green(
+          "fhenix-hardhat-network - Using mocked FHE on Hardhat network",
+        ),
+      ),
     );
   }
 

@@ -72,7 +72,7 @@ export const printExposureSummary = (contracts: ContractExposures[]) => {
   console.log(
     chalk.bold(
       chalk.red(
-        `Detected ${totalExposures} exposed encrypted variables in ${contracts.length} contracts!\n`,
+        `Detected ${totalExposures} exposed encrypted variables in ${contracts.length} contracts!\n\n`,
       ),
     ),
   );
