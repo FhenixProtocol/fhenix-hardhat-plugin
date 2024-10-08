@@ -1,6 +1,6 @@
 {
   "name": "fhenix-hardhat-docker",
-  "version": "0.3.2-alpha.0",
+  "version": "0.3.2-alpha.1",
   "description": "Hardhat plugin to run Fhenix node locally",
   "repository": "github:FhenixProtocol/fhenix-hardhat-plugin",
   "author": "Fhe Labs",

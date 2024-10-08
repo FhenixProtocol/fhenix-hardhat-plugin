@@ -1,25 +1,25 @@
 {
-  "name": "fhenix-hardhat-plugin-root",
-  "version": "0.3.2-alpha.0",
-  "license": "MIT",
-  "scripts": {
-    "preinstall": "npx only-allow pnpm",
-    "format": "prettier --write --cache .",
-    "lint": "pnpm -r --filter='./packages/*' run lint",
-    "build": "pnpm -r --filter='./packages/*' run build",
-    "test": "pnpm -r --filter='./packages/*' run test",
-    "publish": "pnpm -r --filter='./packages/*' publish --no-git-checks"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/FhenixProtocol/fhenix-hardhat-plugin/"
-  },
-  "private": true,
-  "pnpm": {
-    "overrides": {
-      "flat@<5.0.1": ">=5.0.1",
-      "debug@>=3.2.0 <3.2.7": ">=3.2.7",
-      "minimatch@<3.0.5": ">=3.0.5"
-    }
-  }
+	"name": "fhenix-hardhat-plugin-root",
+	"version": "0.3.2-alpha.1",
+	"license": "MIT",
+	"scripts": {
+		"preinstall": "npx only-allow pnpm",
+		"format": "prettier --write --cache .",
+		"lint": "pnpm -r --filter='./packages/*' run lint",
+		"build": "pnpm -r --filter='./packages/*' run build",
+		"test": "pnpm -r --filter='./packages/*' run test",
+		"publish": "pnpm -r --filter='./packages/*' publish --no-git-checks"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/FhenixProtocol/fhenix-hardhat-plugin/"
+	},
+	"private": true,
+	"pnpm": {
+		"overrides": {
+			"flat@<5.0.1": ">=5.0.1",
+			"debug@>=3.2.0 <3.2.7": ">=3.2.7",
+			"minimatch@<3.0.5": ">=3.0.5"
+		}
+	}
 }

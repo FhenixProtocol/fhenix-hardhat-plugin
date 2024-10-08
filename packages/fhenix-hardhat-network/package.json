@@ -1,6 +1,6 @@
 {
   "name": "fhenix-hardhat-network",
-  "version": "0.3.2-alpha.0",
+  "version": "0.3.2-alpha.1",
   "description": "Hardhat plugin to help support Hardhat Network for FHE contract development",
   "repository": "github:FhenixProtocol/fhenix-hardhat-network",
   "author": "Fhe Labs",
