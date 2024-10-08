@@ -1,6 +1,6 @@
 {
   "name": "fhenix-hardhat-network",
-  "version": "0.3.2-alpha.1",
+  "version": "0.3.2-alpha.2",
   "description": "Hardhat plugin to help support Hardhat Network for FHE contract development",
   "repository": "github:FhenixProtocol/fhenix-hardhat-network",
   "author": "Fhe Labs",
@@ -56,13 +56,13 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "typescript": "^5.3.3",
-    "@fhenixprotocol/contracts": "^0.3.0-alpha.2"
+    "@fhenixprotocol/contracts": "^0.3.0"
   },
   "dependencies": {
     "chalk": "^4.1.2"
   },
   "peerDependencies": {
     "hardhat": "^2.11.0",
-    "@fhenixprotocol/contracts": "^0.3.0-alpha.2"
+    "@fhenixprotocol/contracts": "^0.3.0"
   }
 }
