@@ -1,9 +1,10 @@
 import chalk from "chalk";
 import { HDNodeWallet, Wallet } from "ethers";
+import { TASK_COMPILE } from "hardhat/builtin-tasks/task-names";
 import { extendConfig, extendEnvironment, task, types } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
 import {
-  HardhatNetworkHDAccountsConfig,
+  HardhatRuntimeEnvironment,
   HttpNetworkConfig,
   HttpNetworkHDAccountsConfig,
 } from "hardhat/types";
@@ -147,11 +148,22 @@ task(TASK_FHENIX_USE_FAUCET, "Fund an account from the faucet")
     },
   );
 
-// Main task of the plugin. It starts the server and listens for requests.
-task(
-  TASK_FHENIX_CHECK_EXPOSED_ENCRYPTED_VARS,
-  "Check contracts for exposed encrypted vars (euint8-256, ebool, eaddress)",
-).setAction(async ({}, hre) => {
+/**
+ * Detects whether any contracts are exposing encrypted variables
+ *
+ * The following contract code would expose raw encrypted values:
+ *
+ * ```solidity
+ * mapping(address => euint8) public encBalances;
+ * function getBalance(address) public view returns (euint8)
+ * ```
+ *
+ * A malicious contracts can call `VulnerableContract.encBalances(user)` or `VulnerableContract.getBalance(user)` to
+ * get the users raw `euint8` balance. The malicious contract can then `decrypt` that value to expose it.
+ */
+export const checkExposedEncryptedVars = async (
+  hre: HardhatRuntimeEnvironment,
+) => {
   printExposureCheckIntro();
 
   const contractExposures = await detectExposures(hre);
@@ -162,4 +174,20 @@ task(
     console.log(printExposedContracts(contractExposures));
     printExposureSummary(contractExposures);
   }
+};
+
+task(
+  TASK_FHENIX_CHECK_EXPOSED_ENCRYPTED_VARS,
+  "Check contracts for exposed encrypted vars (euint8-256, ebool, eaddress)",
+).setAction(async ({}, hre) => {
+  await checkExposedEncryptedVars(hre);
+});
+
+task(
+  TASK_COMPILE,
+  "Check FHE enabled contracts for exposed encrypted vars (euint8-256, ebool, eaddress)",
+).setAction(async ({}, hre: HardhatRuntimeEnvironment, runSuper) => {
+  const compileSuperRes = await runSuper();
+  await checkExposedEncryptedVars(hre);
+  return compileSuperRes;
 });
