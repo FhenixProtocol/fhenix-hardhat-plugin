@@ -18,7 +18,7 @@ describe("Test CheckExposedEncryptedVars command", async function () {
   describe("Test with Hardhat runtime (artifacts added)", function () {
     useEnvironment("hardhat-project");
 
-    it.only("checks that the check-exposed-encrypted-vars works", async function () {
+    it("checks that the check-exposed-encrypted-vars works", async function () {
       const test = await detectExposures(this.hre);
 
       const output = printExposedContracts(test);
