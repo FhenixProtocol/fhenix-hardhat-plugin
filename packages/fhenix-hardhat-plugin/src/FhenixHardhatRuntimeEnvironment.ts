@@ -33,9 +33,12 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     public hre: HardhatRuntimeEnvironment,
     public config: FhenixHardhatRuntimeEnvironmentConfig,
   ) {
+    const isHardhat = hre?.network?.config?.chainId === 31337;
+    
     let superArgs: InstanceParams = {
       ignoreErrors: true,
       provider: new MockProvider(),
+      skipPubKeyFetch: isHardhat,
     };
     if (hre?.network !== undefined && hre.network.provider) {
       superArgs = {
@@ -47,7 +50,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     super(superArgs);
 
     this.network = hre?.network?.name;
-    this.isHardhat = hre?.network?.config?.chainId === 31337;
+    this.isHardhat = isHardhat;
     console.log(
       `network: ${JSON.stringify(this.network)}, isHardhat?: ${this.isHardhat}`,
     );
