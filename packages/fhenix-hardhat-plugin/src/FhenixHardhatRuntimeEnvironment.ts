@@ -47,7 +47,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     super(superArgs);
 
     this.network = hre?.network?.name;
-    this.isHardhat = hre?.network?.config?.chainId === 31137;
+    this.isHardhat = hre?.network?.config?.chainId === 31337;
     console.log(
       `network: ${JSON.stringify(this.network)}, isHardhat?: ${this.isHardhat}`,
     );
