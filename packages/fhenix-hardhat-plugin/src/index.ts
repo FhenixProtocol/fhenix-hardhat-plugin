@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import { HDNodeWallet, Wallet } from "ethers";
-import { TASK_COMPILE } from "hardhat/builtin-tasks/task-names";
+import { TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS } from "hardhat/builtin-tasks/task-names";
 import { extendConfig, extendEnvironment, task, types } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
 import {
@@ -184,7 +184,7 @@ task(
 });
 
 task(
-  TASK_COMPILE,
+  TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS,
   "Check FHE enabled contracts for exposed encrypted vars (euint8-256, ebool, eaddress)",
 ).setAction(async ({}, hre: HardhatRuntimeEnvironment, runSuper) => {
   const compileSuperRes = await runSuper();
