@@ -24,6 +24,7 @@ describe("Test Fhenix Plugin", function () {
 
     it("checks that client works on hardhat with transparent operation", async function () {
       expect(this.hre.fhenixjs.network).to.be.equal("hardhat");
+      expect(this.hre.fhenixjs.isHardhat).to.be.equal(true);
       const fakeEnc = await this.hre.fhenixjs.encrypt_uint8(1);
       expect(fakeEnc).to.be.an("object");
       expect(fakeEnc).to.have.property("data");
