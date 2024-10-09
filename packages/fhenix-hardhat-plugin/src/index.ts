@@ -61,6 +61,10 @@ extendConfig((config, userConfig) => {
       passphrase: "",
     },
   };
+
+  // this is necessary for fhenixjs constructor to know that 'localhost'
+  // is a hardhat network and therefore prevent pubkey-fetching
+  config.networks.localhost.chainId = 31337;
 });
 
 // Main task of the plugin. It starts the server and listens for requests.

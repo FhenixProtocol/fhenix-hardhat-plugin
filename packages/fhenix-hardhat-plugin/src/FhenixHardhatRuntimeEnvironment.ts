@@ -41,10 +41,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
       skipPubKeyFetch: isHardhat,
     };
     if (hre?.network !== undefined && hre.network.provider) {
-      superArgs = {
-        ignoreErrors: true,
-        provider: hre.network.provider,
-      };
+      superArgs.provider = hre.network.provider;
     }
 
     super(superArgs);
