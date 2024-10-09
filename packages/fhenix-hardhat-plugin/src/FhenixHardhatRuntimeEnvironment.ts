@@ -35,7 +35,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
   ) {
     const isHardhat = hre?.network?.config?.chainId === 31337;
     
-    let superArgs: InstanceParams = {
+    const superArgs: InstanceParams = {
       ignoreErrors: true,
       provider: new MockProvider(),
       skipPubKeyFetch: isHardhat,
