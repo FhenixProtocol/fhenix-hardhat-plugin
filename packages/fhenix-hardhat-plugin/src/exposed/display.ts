@@ -72,7 +72,9 @@ export const printExposureSummary = (contracts: ContractExposures[]) => {
   console.log(
     chalk.bold(
       chalk.red(
-        `Detected ${totalExposures} exposed encrypted variables in ${contracts.length} contracts!\n\n`,
+        `  Detected ${totalExposures} exposed encrypted variables in ${
+          contracts.length
+        } contract${contracts.length > 1 ? "s" : ""}!\n`,
       ),
     ),
   );
@@ -82,7 +84,7 @@ export const printNoExposureSummary = () => {
   console.log(
     chalk.bold(
       chalk.green(
-        "fhenix-hardhat-plugin:CheckExposedEncryptedData detected 0 exposed variables",
+        "fhenix-hardhat-plugin:CheckExposedEncryptedVars detected 0 exposed variables\n",
       ),
     ),
   );
@@ -90,7 +92,7 @@ export const printNoExposureSummary = () => {
 
 export const printExposureCheckIntro = () => {
   console.log(
-    chalk.bold("\nfhenix-hardhat-plugin"),
+    chalk.bold("\nfhenix-hardhat-plugin:CheckExposedEncryptedVars"),
     "checking for exposed encrypted variables....",
   );
 };
