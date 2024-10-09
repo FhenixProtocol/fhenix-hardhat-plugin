@@ -1,6 +1,10 @@
 import chalk from "chalk";
 import fs from "fs";
-import { TASK_TEST } from "hardhat/builtin-tasks/task-names";
+import {
+  TASK_NODE,
+  TASK_RUN,
+  TASK_TEST,
+} from "hardhat/builtin-tasks/task-names";
 import { task } from "hardhat/config";
 import { HARDHAT_NETWORK_NAME, HardhatPluginError } from "hardhat/plugins";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
@@ -79,10 +83,12 @@ const compilePaths = async (hre: HardhatRuntimeEnvironment) => {
   }
 };
 
-task(
-  TASK_TEST,
-  "Deploy fhenix mock contracts on hardhat network test",
-).setAction(async ({}, hre: HardhatRuntimeEnvironment, runSuper) => {
+/**
+ * Injects mock Fhenix FHE contracts on the hardhat network. Noop if not on the hardhat network.
+ *
+ * Currently injected into the `test`, `node`, and `run` tasks.
+ */
+export const injectFhenixMocks = async (hre: HardhatRuntimeEnvironment) => {
   if (hre.network.name === HARDHAT_NETWORK_NAME) {
     await compilePaths(hre);
 
@@ -101,6 +107,27 @@ task(
       ),
     );
   }
+};
 
+task(
+  TASK_TEST,
+  "Deploy fhenix mock contracts into test hardhat runner",
+).setAction(async ({}, hre: HardhatRuntimeEnvironment, runSuper) => {
+  await injectFhenixMocks(hre);
   return runSuper();
 });
+
+task(
+  TASK_NODE,
+  "Deploy fhenix mock contracts into standalone hardhat node",
+).setAction(async ({}, hre: HardhatRuntimeEnvironment, runSuper) => {
+  await injectFhenixMocks(hre);
+  return runSuper();
+});
+
+task(TASK_RUN, "Deploy fhenix mock contracts into hardhat run task").setAction(
+  async ({}, hre: HardhatRuntimeEnvironment, runSuper) => {
+    await injectFhenixMocks(hre);
+    return runSuper();
+  },
+);
