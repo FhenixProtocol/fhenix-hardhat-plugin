@@ -46,5 +46,31 @@ describe("Fhenix Docker Tests", function () {
         throw new Error("Server did not stop");
       }
     });
+
+    it("Should clean deployments when clean flag is set", async function () {
+      // Create a test deployment file/directory
+      const fs = require('fs');
+      const path = require('path');
+      const deploymentsPath = path.join(process.cwd(), 'deployments');
+      
+      if (!fs.existsSync(deploymentsPath)) {
+        fs.mkdirSync(deploymentsPath);
+        fs.writeFileSync(path.join(deploymentsPath, 'test.json'), '{}');
+      }
+
+      // Start server with clean flag
+      await this.hre.run(TASK_FHENIX_DOCKER_START, { clean: true });
+
+      // Verify deployments directory was cleaned
+      const deploymentsExist = fs.existsSync(deploymentsPath);
+      if (deploymentsExist) {
+        // Clean up deployments directory if test fails
+        fs.rmSync(deploymentsPath, { recursive: true, force: true });
+        throw new Error("Deployments directory still exists");
+      }
+
+      // Clean up
+      await this.hre.run(TASK_FHENIX_DOCKER_STOP);
+    });
   });
 });
