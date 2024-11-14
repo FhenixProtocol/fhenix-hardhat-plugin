@@ -7,7 +7,7 @@ export const cleanDeployments = (): void => {
 
   // Get the current working directory (root of the project that imported this package)
   const cwd = process.cwd();
-  const deploymentsPath = path.join(cwd, "deployments");
+  const deploymentsPath = path.join(cwd, "deployments/localfhenix");
 
   if (fs.existsSync(deploymentsPath)) {
     fs.rmSync(deploymentsPath, { recursive: true, force: true });
