@@ -6,6 +6,7 @@ import {
   FHENIX_DEFAULT_IMAGE,
   FHENIX_DEFAULT_IMAGE_ARM,
   LOCALFHENIX_CONTAINER_NAME,
+  SUBTASK_FHENIX_DOCKER_CLEAN_DEPLOYMENTS,
   SUBTASK_FHENIX_DOCKER_PULL,
   TASK_FHENIX_DOCKER_START,
   TASK_FHENIX_DOCKER_STOP,
@@ -16,6 +17,7 @@ import {
   runLocalFhenixSeparateProcess,
   stopLocalFhenix,
 } from "./docker";
+import { cleanDeployments } from "./env";
 
 task(TASK_FHENIX_DOCKER_STOP, "Stops a LocalFhenix node").setAction(
   async () => {
@@ -29,6 +31,13 @@ subtask(SUBTASK_FHENIX_DOCKER_PULL, "Pulls the latest LocalFhenix image")
   .setAction(async ({ image }: { image: string }) => {
     pullDockerContainer(image);
   });
+
+subtask(
+  SUBTASK_FHENIX_DOCKER_CLEAN_DEPLOYMENTS,
+  "Cleans existing contract deployments",
+).setAction(async () => {
+  cleanDeployments();
+});
 
 // Main task of the plugin. It starts the server and listens for requests.
 task(TASK_FHENIX_DOCKER_START, "Starts a LocalFhenix node")
@@ -52,6 +61,7 @@ task(TASK_FHENIX_DOCKER_START, "Starts a LocalFhenix node")
   )
   .addOptionalParam("image", `Fhenix image to use`, undefined, types.string)
   // .addOptionalParam('log', 'Log filter level (error, warn, info, debug) - default: info', undefined, types.string)
+  .addOptionalParam("clean", `Clean previous deployments`, false, types.boolean)
   .setAction(
     async (
       {
@@ -59,12 +69,14 @@ task(TASK_FHENIX_DOCKER_START, "Starts a LocalFhenix node")
         ws,
         faucet,
         image,
+        clean,
       }: // log,
       {
         rpc: number;
         ws: number;
         faucet: number;
         image: string;
+        clean: boolean;
         // log: string;
       },
       { run },
@@ -86,5 +98,9 @@ task(TASK_FHENIX_DOCKER_START, "Starts a LocalFhenix node")
       console.info(
         chalk.green(`Started LocalFhenix successfully at 127.0.0.1:${rpc}`),
       );
+
+      if (clean) {
+        await run(SUBTASK_FHENIX_DOCKER_CLEAN_DEPLOYMENTS);
+      }
     },
   );

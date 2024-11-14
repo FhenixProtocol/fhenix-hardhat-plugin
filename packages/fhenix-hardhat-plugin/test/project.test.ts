@@ -2,7 +2,10 @@
 import { assert, expect } from "chai";
 import { EncryptedUint8 } from "fhenixjs";
 
-import { TASK_FHENIX_USE_FAUCET } from "../src/const";
+import {
+  TASK_FHENIX_CHECK_EXPOSED_ENCRYPTED_VARS,
+  TASK_FHENIX_USE_FAUCET,
+} from "../src/const";
 import { FhenixHardhatRuntimeEnvironment } from "../src/FhenixHardhatRuntimeEnvironment";
 
 import { useEnvironment } from "./helpers";
@@ -21,6 +24,7 @@ describe("Test Fhenix Plugin", function () {
 
     it("checks that client works on hardhat with transparent operation", async function () {
       expect(this.hre.fhenixjs.network).to.be.equal("hardhat");
+      expect(this.hre.fhenixjs.isHardhat).to.be.equal(true);
       const fakeEnc = await this.hre.fhenixjs.encrypt_uint8(1);
       expect(fakeEnc).to.be.an("object");
       expect(fakeEnc).to.have.property("data");
@@ -47,6 +51,15 @@ describe("Test Fhenix Plugin", function () {
 
     it("checks that the faucet works", async function () {
       await this.hre.run(TASK_FHENIX_USE_FAUCET);
+    });
+  });
+
+  describe("Test CheckExposedEncryptedVars command", async function () {
+    useEnvironment("localfhenix");
+    // todo: add a test that mocks the fhenixjs client and checks that the plugin works
+
+    it("checks that the check-exposed-encrypted-vars works", async function () {
+      await this.hre.run(TASK_FHENIX_CHECK_EXPOSED_ENCRYPTED_VARS);
     });
   });
 });

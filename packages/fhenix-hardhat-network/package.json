@@ -1,8 +1,8 @@
 {
-  "name": "fhenix-hardhat-docker",
+  "name": "fhenix-hardhat-network",
   "version": "0.3.2",
-  "description": "Hardhat plugin to run Fhenix node locally",
-  "repository": "github:FhenixProtocol/fhenix-hardhat-plugin",
+  "description": "Hardhat plugin to help support Hardhat Network for FHE contract development",
+  "repository": "github:FhenixProtocol/fhenix-hardhat-network",
   "author": "Fhe Labs",
   "license": "MIT",
   "main": "dist/src/index.js",
@@ -23,33 +23,46 @@
     "prepublishOnly": "npm run build"
   },
   "files": [
-    "dist/src/",
+    "dist/src",
+    "dist/artifacts",
+    "artifacts/contracts/MockFheOps.sol/MockFheOps.json",
     "src/",
     "LICENSE",
     "README.md",
     "postinstall.js"
   ],
   "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",
+    "@nomicfoundation/hardhat-ethers": "^3.0.7",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.11",
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.9",
+    "@typechain/hardhat": "^9.1.0",
     "@types/chai": "^4.3.11",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^16.18.76",
+    "@types/mocha": "^9.1.0",
+    "@types/node": ">=18.0.0",
     "@types/eslint": "^8",
     "chai": "^4.4.1",
+    "ethers": "^6.13.2",
     "hardhat": "^2.11.0",
+    "hardhat-gas-reporter": "^1.0.10",
     "mocha": "^10.4.0",
     "prettier": "2.0.5",
-    "ts-node": "^8.10.2",
+    "solidity-coverage": "^0.8.12",
+    "ts-node": "^10.8.0",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "eslint": "^8.26.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "@fhenixprotocol/contracts": "^0.3.0"
   },
   "dependencies": {
     "chalk": "^4.1.2"
   },
   "peerDependencies": {
-    "hardhat": "^2.11.0"
+    "hardhat": "^2.11.0",
+    "@fhenixprotocol/contracts": "^0.3.0"
   }
 }

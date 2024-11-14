@@ -60,4 +60,7 @@ typings/
 # environment variables
 .env
 
+# ide files
+.idea
+
 dist

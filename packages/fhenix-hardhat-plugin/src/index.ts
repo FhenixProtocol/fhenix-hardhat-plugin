@@ -1,11 +1,26 @@
 import chalk from "chalk";
 import { HDNodeWallet, Wallet } from "ethers";
+import { TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS } from "hardhat/builtin-tasks/task-names";
 import { extendConfig, extendEnvironment, task, types } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
-import { HttpNetworkConfig, HttpNetworkHDAccountsConfig } from "hardhat/types";
+import {
+  HardhatRuntimeEnvironment,
+  HttpNetworkConfig,
+  HttpNetworkHDAccountsConfig,
+} from "hardhat/types";
 
 import { getFunds } from "./common";
-import { TASK_FHENIX_USE_FAUCET } from "./const";
+import {
+  TASK_FHENIX_CHECK_EXPOSED_ENCRYPTED_VARS,
+  TASK_FHENIX_USE_FAUCET,
+} from "./const";
+import {
+  detectExposures,
+  printExposedContracts,
+  printExposureSummary,
+  printExposureCheckIntro,
+  printNoExposureSummary,
+} from "./exposed";
 import { FhenixHardhatRuntimeEnvironment } from "./FhenixHardhatRuntimeEnvironment";
 import "./type-extensions";
 
@@ -42,6 +57,8 @@ extendConfig((config, userConfig) => {
       path: "m/44'/60'/0'/0",
       initialIndex: 0,
       count: 20,
+      accountsBalance: "10000000000000000000",
+      passphrase: "",
     },
   };
 });
@@ -130,3 +147,47 @@ task(TASK_FHENIX_USE_FAUCET, "Fund an account from the faucet")
       }
     },
   );
+
+/**
+ * Detects whether any contracts are exposing encrypted variables
+ *
+ * The following contract code would expose raw encrypted values:
+ *
+ * ```solidity
+ * mapping(address => euint8) public encBalances;
+ * function getBalance(address) public view returns (euint8)
+ * ```
+ *
+ * A malicious contracts can call `VulnerableContract.encBalances(user)` or `VulnerableContract.getBalance(user)` to
+ * get the users raw `euint8` balance. The malicious contract can then `decrypt` that value to expose it.
+ */
+export const checkExposedEncryptedVars = async (
+  hre: HardhatRuntimeEnvironment,
+) => {
+  printExposureCheckIntro();
+
+  const contractExposures = await detectExposures(hre);
+
+  if (contractExposures.length === 0) {
+    printNoExposureSummary();
+  } else {
+    console.log(printExposedContracts(contractExposures));
+    printExposureSummary(contractExposures);
+  }
+};
+
+task(
+  TASK_FHENIX_CHECK_EXPOSED_ENCRYPTED_VARS,
+  "Check contracts for exposed encrypted vars (euint8-256, ebool, eaddress)",
+).setAction(async ({}, hre) => {
+  await checkExposedEncryptedVars(hre);
+});
+
+task(
+  TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS,
+  "Check FHE enabled contracts for exposed encrypted vars (euint8-256, ebool, eaddress)",
+).setAction(async ({}, hre: HardhatRuntimeEnvironment, runSuper) => {
+  const compileSuperRes = await runSuper();
+  await checkExposedEncryptedVars(hre);
+  return compileSuperRes;
+});

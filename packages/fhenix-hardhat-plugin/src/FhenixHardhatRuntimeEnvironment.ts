@@ -9,6 +9,7 @@ import {
   FhenixClient,
   getPermit,
   InstanceParams,
+  Permit,
   SupportedProvider,
 } from "fhenixjs";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
@@ -26,44 +27,34 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
   // move the faucet to a task on the example repo
   // there's no good way to discover the faucet port from here
   public network: string;
+  public isHardhat: boolean;
 
   public constructor(
     public hre: HardhatRuntimeEnvironment,
     public config: FhenixHardhatRuntimeEnvironmentConfig,
   ) {
-    let superArgs: InstanceParams = {
+    const isHardhat = hre?.network?.config?.chainId === 31337;
+    
+    const superArgs: InstanceParams = {
       ignoreErrors: true,
       provider: new MockProvider(),
+      skipPubKeyFetch: isHardhat,
     };
     if (hre?.network !== undefined && hre.network.provider) {
-      superArgs = {
-        ignoreErrors: true,
-        provider: hre.network.provider,
-      };
+      superArgs.provider = hre.network.provider;
     }
 
     super(superArgs);
 
     this.network = hre?.network?.name;
-    console.log(`network: ${JSON.stringify(this.network)}`);
-    if (hre?.network?.name === "hardhat") {
-      return;
-    }
+    this.isHardhat = isHardhat;
   }
 
-  // public useHardhatNetwork() {
-  //   this.network = "hardhat";
-  // }
-  //
-  // public useFhenix() {
-  //   this.network = "fhenix";
-  // }
-  //
   public async encrypt_uint8(
     value: number,
     securityZone?: number | undefined,
   ): Promise<EncryptedUint8> {
-    if (this.network === "hardhat") {
+    if (this.isHardhat) {
       const data = bigintToUint8Array(BigInt(value));
 
       return {
@@ -79,7 +70,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     value: number,
     securityZone?: number | undefined,
   ): Promise<EncryptedUint16> {
-    if (this.network === "hardhat") {
+    if (this.isHardhat) {
       const data = bigintToUint8Array(BigInt(value));
 
       return {
@@ -95,7 +86,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     value: number,
     securityZone?: number | undefined,
   ): Promise<EncryptedUint32> {
-    if (this.network === "hardhat") {
+    if (this.isHardhat) {
       const data = bigintToUint8Array(BigInt(value));
 
       return {
@@ -111,7 +102,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     value: string | bigint,
     securityZone?: number | undefined,
   ): Promise<EncryptedUint64> {
-    if (this.network === "hardhat") {
+    if (this.isHardhat) {
       const data = bigintToUint8Array(BigInt(value));
 
       return {
@@ -127,7 +118,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     value: string | bigint,
     securityZone?: number | undefined,
   ): Promise<EncryptedUint128> {
-    if (this.network === "hardhat") {
+    if (this.isHardhat) {
       const data = bigintToUint8Array(BigInt(value));
 
       return {
@@ -143,7 +134,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     value: string | bigint,
     securityZone?: number | undefined,
   ): Promise<EncryptedUint256> {
-    if (this.network === "hardhat") {
+    if (this.isHardhat) {
       const data = bigintToUint8Array(BigInt(value));
 
       return {
@@ -159,7 +150,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     value: boolean,
     securityZone?: number | undefined,
   ): Promise<EncryptedBool> {
-    if (this.network === "hardhat") {
+    if (this.isHardhat) {
       if (value) {
         const data = bigintToUint8Array(BigInt(1));
 
@@ -180,12 +171,15 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     }
   }
 
-  public unseal(contractAddress: string, ciphertext: string): bigint {
-    // console.log(`ct: ${ciphertext}`);
-    if (this.network === "hardhat") {
-      return BigInt(ciphertext);
+  public unseal(
+    contractAddress: string,
+    ciphertext: string,
+    account: string,
+  ): bigint {
+    if (this.isHardhat) {
+      return uint8ArrayToBigint(ciphertext);
     } else {
-      return super.unseal(contractAddress, ciphertext);
+      return super.unseal(contractAddress, ciphertext, account);
     }
   }
 
@@ -196,19 +190,13 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
   public async createPermit(
     contractAddress: string,
     provider?: SupportedProvider,
-  ) {
+  ): Promise<Permit | undefined> {
     if (!provider && this.provider === undefined) {
       throw new Error("no provider provided");
     }
 
     const permit = await getPermit(contractAddress, provider || this.provider!);
-
-    if (!permit) {
-      return;
-    }
-
-    this.storePermit(permit);
-    return permit;
+    return permit ?? undefined;
   }
 
   public sayHello() {
@@ -229,16 +217,19 @@ export class MockProvider {
     });
   }
 }
-//
-// function bigintToUint8Array(value: bigint): Uint8Array {
-//   const hex = value.toString(16);
-//   const len = Math.ceil(hex.length / 2);
-//   const u8 = new Uint8Array(len);
-//   for (let i = 0; i < len; i++) {
-//     u8[len - i - 1] = parseInt(hex.substr(i * 2, 2), 16);
-//   }
-//   return u8;
-// }
+
+function uint8ArrayToBigint(uint8ArrayStr: string): bigint {
+  const byteArray = new Uint8Array(
+    uint8ArrayStr.split("").map((c) => c.charCodeAt(0)),
+  );
+
+  let result = BigInt(0);
+  for (const byteArrayItem of byteArray) {
+    result = (result << BigInt(8)) + BigInt(byteArrayItem);
+  }
+
+  return result;
+}
 
 function bigintToUint8Array(bigNum: bigint): Uint8Array {
   const byteLength = 32;
