@@ -159,8 +159,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       fhenixjs:
-        specifier: ^0.4.1-alpha.0
-        version: 0.4.1-alpha.0
+        specifier: ^0.4.1
+        version: 0.4.1
     devDependencies:
       '@types/chai':
         specifier: ^4.1.7
@@ -2505,8 +2505,8 @@ packages:
       reusify: 1.0.4
     dev: true
 
-  /fhenixjs@0.4.1-alpha.0:
-    resolution: {integrity: sha512-WiP5hGSM4iEThHw23nlHAUyyxmV1i/tu94cygIb+/FZqlcb3pogxw+ItMpePFVVuU1Hy6Ly0jdyb7RO1CbApnA==}
+  /fhenixjs@0.4.1:
+    resolution: {integrity: sha512-q+IgMHFhTrXpsdrDox67Qw4InffCPYiNnXpn8cUThmfKMLGOhVzp4TgMc4xG5yajVroIw+Fle1C8SJILxG+BVQ==}
     engines: {node: '>=20.0.0'}
     dependencies:
       '@types/node': 20.16.1
