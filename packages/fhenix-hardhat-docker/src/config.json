@@ -1,5 +1,5 @@
 {
-  "image": "ghcr.io/fhenixprotocol/localfhenix:v0.3.2-alpha.4",
-  "imageArm": "ghcr.io/fhenixprotocol/localfhenix:v0.3.2-alpha.4",
+  "image": "ghcr.io/fhenixprotocol/localfhenix:v0.3.2",
+  "imageArm": "ghcr.io/fhenixprotocol/localfhenix:v0.3.2",
   "container_name": "localfhenix_hh_plugin"
 }
