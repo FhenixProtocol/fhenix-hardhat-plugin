@@ -48,9 +48,6 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
 
     this.network = hre?.network?.name;
     this.isHardhat = isHardhat;
-    console.log(
-      `network: ${JSON.stringify(this.network)}, isHardhat?: ${this.isHardhat}`,
-    );
   }
 
   public async encrypt_uint8(
