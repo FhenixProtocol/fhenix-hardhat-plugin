@@ -32,10 +32,12 @@ subtask(SUBTASK_FHENIX_DOCKER_PULL, "Pulls the latest LocalFhenix image")
     pullDockerContainer(image);
   });
 
-subtask(SUBTASK_FHENIX_DOCKER_CLEAN_DEPLOYMENTS, "Cleans existing contract deployments")
-  .setAction(async () => {
-    cleanDeployments();
-  });
+subtask(
+  SUBTASK_FHENIX_DOCKER_CLEAN_DEPLOYMENTS,
+  "Cleans existing contract deployments",
+).setAction(async () => {
+  cleanDeployments();
+});
 
 // Main task of the plugin. It starts the server and listens for requests.
 task(TASK_FHENIX_DOCKER_START, "Starts a LocalFhenix node")

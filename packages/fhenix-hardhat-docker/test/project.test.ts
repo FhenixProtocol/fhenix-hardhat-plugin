@@ -4,6 +4,8 @@ import {
   TASK_FHENIX_DOCKER_STOP,
 } from "../src/const";
 import { isContainerRunning, stopLocalFhenix } from "../src/docker";
+import fs from "fs";
+import path from "path";
 
 import { useEnvironment } from "./helpers";
 
@@ -49,13 +51,11 @@ describe("Fhenix Docker Tests", function () {
 
     it("Should clean deployments when clean flag is set", async function () {
       // Create a test deployment file/directory
-      const fs = require('fs');
-      const path = require('path');
-      const deploymentsPath = path.join(process.cwd(), 'deployments');
-      
+      const deploymentsPath = path.join(process.cwd(), "deployments");
+
       if (!fs.existsSync(deploymentsPath)) {
         fs.mkdirSync(deploymentsPath);
-        fs.writeFileSync(path.join(deploymentsPath, 'test.json'), '{}');
+        fs.writeFileSync(path.join(deploymentsPath, "test.json"), "{}");
       }
 
       // Start server with clean flag
