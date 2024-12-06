@@ -23,6 +23,7 @@ import {
 } from "./exposed";
 import { FhenixHardhatRuntimeEnvironment } from "./FhenixHardhatRuntimeEnvironment";
 import "./type-extensions";
+import { fhenixsdk } from "fhenixjs";
 
 // This import is needed to let the TypeScript compiler know that it should include your type
 // extensions in your npm package's types file.
@@ -30,13 +31,12 @@ import "./type-extensions";
 extendEnvironment((hre) => {
   hre.fhenixjs = lazyObject(() => {
     const fhenix = new FhenixHardhatRuntimeEnvironment(hre, {
-      rpcPort: 42069,
-      wsPort: 42070,
       faucetPort: 42000,
     });
 
     return fhenix;
   });
+  hre.fhenixsdk = lazyObject(() => fhenixsdk);
 });
 
 extendConfig((config, userConfig) => {
