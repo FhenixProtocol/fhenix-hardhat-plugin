@@ -36,7 +36,24 @@ extendEnvironment((hre) => {
 
     return fhenix;
   });
-  hre.fhenixsdk = lazyObject(() => fhenixsdk);
+
+  hre.fhenixsdk = lazyObject(() => ({
+    ...fhenixsdk,
+    initializeWithHHSigner: async ({ signer, ...params }) => {
+      fhenixsdk.initialize({
+        provider: {
+          call: signer.provider.call,
+          getChainId: async () =>
+            (await signer.provider.getNetwork()).chainId.toString(),
+        },
+        signer: {
+          signTypedData: signer.signTypedData,
+          getAddress: signer.getAddress,
+        },
+        ...params,
+      });
+    },
+  }));
 });
 
 extendConfig((config, userConfig) => {

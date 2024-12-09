@@ -29,6 +29,7 @@
     "README.md"
   ],
   "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
     "@types/node": "^16.18.76",

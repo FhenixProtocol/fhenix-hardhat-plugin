@@ -1,6 +1,5 @@
 // tslint:disable-next-line no-implicit-dependencies
 import { assert, expect } from "chai";
-import { EncryptedUint8 } from "fhenixjs";
 
 import {
   TASK_FHENIX_CHECK_EXPOSED_ENCRYPTED_VARS,
@@ -9,6 +8,7 @@ import {
 import { FhenixHardhatRuntimeEnvironment } from "../src/FhenixHardhatRuntimeEnvironment";
 
 import { useEnvironment } from "./helpers";
+import { Encryptable } from "fhenixjs";
 
 describe("Test Fhenix Plugin", function () {
   describe("Test Runtime with default project", function () {
@@ -30,6 +30,22 @@ describe("Test Fhenix Plugin", function () {
       expect(fakeEnc).to.have.property("data");
       expect(fakeEnc).to.have.property("securityZone");
     });
+
+    // V2
+
+    it("checks that fhenixsdk is initialized in hre", function () {
+      expect(this.hre.fhenixsdk != null).to.equal(true);
+    });
+    it("fhenixsdk can be initialized", function () {});
+    it("fhenixsdk.initializeWithHHSigner utility function");
+    it("fhenixsdk encrypt", function () {
+      const fakeEnc = this.hre.fhenixsdk.encrypt(Encryptable.uint8(5));
+      expect(fakeEnc).to.be.an("object");
+      expect(fakeEnc).to.have.property("data");
+      expect(fakeEnc).to.have.property("securityZone");
+      expect(fakeEnc.securityZone).to.be.equal(0);
+    });
+    it("fhenixsdk permit management");
   });
 
   describe("Hardhat Runtime Environment extension for localfhenix", function () {
