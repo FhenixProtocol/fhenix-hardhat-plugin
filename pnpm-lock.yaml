@@ -159,8 +159,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       fhenixjs:
-        specifier: ^0.4.2-alpha.0
-        version: 0.4.2-alpha.0
+        specifier: ^0.4.2-alpha.1
+        version: 0.4.2-alpha.1
     devDependencies:
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -1342,8 +1342,8 @@ packages:
   fastq@1.17.1:
     resolution: {integrity: sha512-sRVD3lWVIXWg6By68ZN7vho9a1pQcN/WBFaAAsDDFzlJjvoGx0P8z7V1t72grFJfJhu3YPZBuu25f7Kaw2jN1w==}
 
-  fhenixjs@0.4.2-alpha.0:
-    resolution: {integrity: sha512-tkHpv8AuUV78sUt3jc6p9tvmQUsoNvYODKBvEQF4i2cqyc4KmwoSg07DmB4qjfiZsFqPTYcMn68UskKBKvJtOw==}
+  fhenixjs@0.4.2-alpha.1:
+    resolution: {integrity: sha512-4q4jSmlWpc0mswhBJqvjYJ6aSpGlZbgk3izgtD7znTzweZKniK+CRUm+Qcc+jLM3r3VsLWlyhc+fgDSISrKUHQ==}
     engines: {node: '>=20.0.0'}
 
   file-entry-cache@6.0.1:
@@ -4042,7 +4042,7 @@ snapshots:
     dependencies:
       reusify: 1.0.4
 
-  fhenixjs@0.4.2-alpha.0:
+  fhenixjs@0.4.2-alpha.1:
     dependencies:
       '@types/node': 20.16.1
       immer: 10.1.1
