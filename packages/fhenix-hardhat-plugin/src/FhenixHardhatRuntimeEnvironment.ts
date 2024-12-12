@@ -17,9 +17,9 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { getFunds } from "./common";
 
 interface FhenixHardhatRuntimeEnvironmentConfig {
-  faucetPort: number;
   rpcPort: number;
   wsPort: number;
+  faucetPort: number;
 }
 
 export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
@@ -50,7 +50,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     this.isHardhat = isHardhat;
   }
 
-  private hardhatMockEncryptWrapper = <
+  private hardhatMockEncryptCurry = <
     T extends (value: any, securityZone?: number) => Promise<any>
   >(
     encryptFunction: T,
@@ -66,20 +66,14 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     }) as T;
   };
 
-  public encrypt_uint8 = this.hardhatMockEncryptWrapper(super.encrypt_uint8);
-  public encrypt_uint16 = this.hardhatMockEncryptWrapper(super.encrypt_uint16);
-  public encrypt_uint32 = this.hardhatMockEncryptWrapper(super.encrypt_uint32);
-  public encrypt_uint64 = this.hardhatMockEncryptWrapper(super.encrypt_uint64);
-  public encrypt_uint128 = this.hardhatMockEncryptWrapper(
-    super.encrypt_uint128,
-  );
-  public encrypt_uint256 = this.hardhatMockEncryptWrapper(
-    super.encrypt_uint256,
-  );
-  public encrypt_bool = this.hardhatMockEncryptWrapper(super.encrypt_bool);
-  public encrypt_address = this.hardhatMockEncryptWrapper(
-    super.encrypt_address,
-  );
+  public encrypt_bool = this.hardhatMockEncryptCurry(super.encrypt_bool);
+  public encrypt_uint8 = this.hardhatMockEncryptCurry(super.encrypt_uint8);
+  public encrypt_uint16 = this.hardhatMockEncryptCurry(super.encrypt_uint16);
+  public encrypt_uint32 = this.hardhatMockEncryptCurry(super.encrypt_uint32);
+  public encrypt_uint64 = this.hardhatMockEncryptCurry(super.encrypt_uint64);
+  public encrypt_uint128 = this.hardhatMockEncryptCurry(super.encrypt_uint128);
+  public encrypt_uint256 = this.hardhatMockEncryptCurry(super.encrypt_uint256);
+  public encrypt_address = this.hardhatMockEncryptCurry(super.encrypt_address);
 
   public unseal(
     contractAddress: string,

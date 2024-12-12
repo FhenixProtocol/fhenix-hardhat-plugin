@@ -31,9 +31,9 @@ import { fhenixsdk } from "fhenixjs";
 extendEnvironment((hre) => {
   hre.fhenixjs = lazyObject(() => {
     const fhenix = new FhenixHardhatRuntimeEnvironment(hre, {
-      faucetPort: 42000,
       rpcPort: 42069,
       wsPort: 42070,
+      faucetPort: 42000,
     });
 
     return fhenix;
