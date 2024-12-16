@@ -29,6 +29,7 @@
     "README.md"
   ],
   "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
     "@types/node": "^16.18.76",
@@ -48,8 +49,8 @@
   "dependencies": {
     "axios": "^1.6.5",
     "chalk": "^4.1.2",
-    "ethers": "^6.0.0",
-    "fhenixjs": "^0.4.1"
+    "ethers": "^6.10.0",
+    "fhenixjs": "^0.4.2-alpha.1"
   },
   "peerDependencies": {
     "hardhat": "^2.11.0"

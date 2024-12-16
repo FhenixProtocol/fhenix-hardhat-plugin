@@ -34,7 +34,7 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     public config: FhenixHardhatRuntimeEnvironmentConfig,
   ) {
     const isHardhat = hre?.network?.config?.chainId === 31337;
-    
+
     const superArgs: InstanceParams = {
       ignoreErrors: true,
       provider: new MockProvider(),
@@ -50,137 +50,38 @@ export class FhenixHardhatRuntimeEnvironment extends FhenixClient {
     this.isHardhat = isHardhat;
   }
 
-  public async encrypt_uint8(
-    value: number,
-    securityZone?: number | undefined,
-  ): Promise<EncryptedUint8> {
-    if (this.isHardhat) {
-      const data = bigintToUint8Array(BigInt(value));
-
-      return {
-        data,
-        securityZone: securityZone || 0,
-      };
-    } else {
-      return super.encrypt_uint8(value, securityZone);
-    }
-  }
-
-  public async encrypt_uint16(
-    value: number,
-    securityZone?: number | undefined,
-  ): Promise<EncryptedUint16> {
-    if (this.isHardhat) {
-      const data = bigintToUint8Array(BigInt(value));
-
-      return {
-        data,
-        securityZone: securityZone || 0,
-      };
-    } else {
-      return super.encrypt_uint16(value, securityZone);
-    }
-  }
-
-  public async encrypt_uint32(
-    value: number,
-    securityZone?: number | undefined,
-  ): Promise<EncryptedUint32> {
-    if (this.isHardhat) {
-      const data = bigintToUint8Array(BigInt(value));
-
-      return {
-        data,
-        securityZone: securityZone || 0,
-      };
-    } else {
-      return super.encrypt_uint32(value, securityZone);
-    }
-  }
-
-  public async encrypt_uint64(
-    value: string | bigint,
-    securityZone?: number | undefined,
-  ): Promise<EncryptedUint64> {
-    if (this.isHardhat) {
-      const data = bigintToUint8Array(BigInt(value));
-
-      return {
-        data,
-        securityZone: securityZone || 0,
-      };
-    } else {
-      return super.encrypt_uint64(value, securityZone);
-    }
-  }
-
-  public async encrypt_uint128(
-    value: string | bigint,
-    securityZone?: number | undefined,
-  ): Promise<EncryptedUint128> {
-    if (this.isHardhat) {
-      const data = bigintToUint8Array(BigInt(value));
-
-      return {
-        data,
-        securityZone: securityZone || 0,
-      };
-    } else {
-      return super.encrypt_uint128(value, securityZone);
-    }
-  }
-
-  public async encrypt_uint256(
-    value: string | bigint,
-    securityZone?: number | undefined,
-  ): Promise<EncryptedUint256> {
-    if (this.isHardhat) {
-      const data = bigintToUint8Array(BigInt(value));
-
-      return {
-        data,
-        securityZone: securityZone || 0,
-      };
-    } else {
-      return super.encrypt_uint256(value, securityZone);
-    }
-  }
-
-  public async encrypt_bool(
-    value: boolean,
-    securityZone?: number | undefined,
-  ): Promise<EncryptedBool> {
-    if (this.isHardhat) {
-      if (value) {
-        const data = bigintToUint8Array(BigInt(1));
-
-        return {
-          data,
-          securityZone: securityZone || 0,
-        };
-      } else {
-        const data = bigintToUint8Array(BigInt(0));
-
-        return {
-          data,
-          securityZone: securityZone || 0,
-        };
+  private hardhatMockEncryptCurry = <
+    T extends (value: any, securityZone?: number) => Promise<any>
+  >(
+    encryptFunction: T,
+  ) => {
+    return (async (
+      value: Parameters<T>[0],
+      securityZone?: number,
+    ): Promise<ReturnType<T>> => {
+      if (this.isHardhat) {
+        return hardhatMockEncrypt(BigInt(value), securityZone) as ReturnType<T>;
       }
-    } else {
-      return super.encrypt_bool(value, securityZone);
-    }
-  }
+      return encryptFunction(value, securityZone);
+    }) as T;
+  };
+
+  public encrypt_bool = this.hardhatMockEncryptCurry(super.encrypt_bool);
+  public encrypt_uint8 = this.hardhatMockEncryptCurry(super.encrypt_uint8);
+  public encrypt_uint16 = this.hardhatMockEncryptCurry(super.encrypt_uint16);
+  public encrypt_uint32 = this.hardhatMockEncryptCurry(super.encrypt_uint32);
+  public encrypt_uint64 = this.hardhatMockEncryptCurry(super.encrypt_uint64);
+  public encrypt_uint128 = this.hardhatMockEncryptCurry(super.encrypt_uint128);
+  public encrypt_uint256 = this.hardhatMockEncryptCurry(super.encrypt_uint256);
+  public encrypt_address = this.hardhatMockEncryptCurry(super.encrypt_address);
 
   public unseal(
     contractAddress: string,
     ciphertext: string,
     account: string,
   ): bigint {
-    if (this.isHardhat) {
-      return uint8ArrayToBigint(ciphertext);
-    } else {
-      return super.unseal(contractAddress, ciphertext, account);
-    }
+    if (this.isHardhat) return hardhatMockDecrypt(ciphertext);
+    return super.unseal(contractAddress, ciphertext, account);
   }
 
   public async getFunds(address: string) {
@@ -218,10 +119,9 @@ export class MockProvider {
   }
 }
 
-function uint8ArrayToBigint(uint8ArrayStr: string): bigint {
-  const byteArray = new Uint8Array(
-    uint8ArrayStr.split("").map((c) => c.charCodeAt(0)),
-  );
+function hardhatMockDecrypt(value: string): bigint {
+  // Convert string into byte array
+  const byteArray = new Uint8Array(value.split("").map((c) => c.charCodeAt(0)));
 
   let result = BigInt(0);
   for (const byteArrayItem of byteArray) {
@@ -248,3 +148,8 @@ function bigintToUint8Array(bigNum: bigint): Uint8Array {
 
   return byteArray;
 }
+
+const hardhatMockEncrypt = (value: bigint, securityZone = 0) => ({
+  data: bigintToUint8Array(BigInt(value)),
+  securityZone: securityZone || 0,
+});

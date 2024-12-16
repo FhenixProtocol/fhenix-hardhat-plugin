@@ -23,6 +23,7 @@ import {
 } from "./exposed";
 import { FhenixHardhatRuntimeEnvironment } from "./FhenixHardhatRuntimeEnvironment";
 import "./type-extensions";
+import { fhenixsdk } from "fhenixjs";
 
 // This import is needed to let the TypeScript compiler know that it should include your type
 // extensions in your npm package's types file.
@@ -37,6 +38,24 @@ extendEnvironment((hre) => {
 
     return fhenix;
   });
+
+  hre.fhenixsdk = lazyObject(() => ({
+    ...fhenixsdk,
+    initializeWithHHSigner: async ({ signer, ...params }) => {
+      fhenixsdk.initialize({
+        provider: {
+          call: signer.provider.call,
+          getChainId: async () =>
+            (await signer.provider.getNetwork()).chainId.toString(),
+        },
+        signer: {
+          signTypedData: signer.signTypedData,
+          getAddress: signer.getAddress,
+        },
+        ...params,
+      });
+    },
+  }));
 });
 
 extendConfig((config, userConfig) => {

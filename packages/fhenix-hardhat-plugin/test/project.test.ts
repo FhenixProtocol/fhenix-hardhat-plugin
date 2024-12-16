@@ -1,6 +1,5 @@
 // tslint:disable-next-line no-implicit-dependencies
 import { assert, expect } from "chai";
-import { EncryptedUint8 } from "fhenixjs";
 
 import {
   TASK_FHENIX_CHECK_EXPOSED_ENCRYPTED_VARS,
@@ -9,6 +8,10 @@ import {
 import { FhenixHardhatRuntimeEnvironment } from "../src/FhenixHardhatRuntimeEnvironment";
 
 import { useEnvironment } from "./helpers";
+import { createTfhePublicKey, Encryptable } from "fhenixjs";
+import { BobWallet, MockProvider } from "./mocks";
+
+const HARDHAT_NETWORK_ID = "31337";
 
 describe("Test Fhenix Plugin", function () {
   describe("Test Runtime with default project", function () {
@@ -30,6 +33,70 @@ describe("Test Fhenix Plugin", function () {
       expect(fakeEnc).to.have.property("data");
       expect(fakeEnc).to.have.property("securityZone");
     });
+
+    // V2
+
+    it("checks that fhenixsdk is initialized in hre", function () {
+      expect(this.hre.fhenixsdk != null).to.equal(true);
+    });
+    it("fhenixsdk can be initialized", async function () {
+      const bobProvider = new MockProvider(
+        "0xPublicKeyMock",
+        BobWallet,
+        HARDHAT_NETWORK_ID,
+      );
+      const bobSigner = await bobProvider.getSigner();
+
+      // Should initialize correctly, but fhe public key for hardhat not set
+      await this.hre.fhenixsdk.initialize({
+        provider: bobProvider,
+        signer: bobSigner,
+        projects: ["TEST"],
+      });
+    });
+    it("fhenixsdk.initializeWithHHSigner utility function", async function () {
+      const [signer] = await this.hre.ethers.getSigners();
+      await this.hre.fhenixsdk.initializeWithHHSigner({
+        signer,
+        projects: ["TEST"],
+      });
+
+      // Should create a permit
+      const bobPermit = await this.hre.fhenixsdk.createPermit();
+      expect(bobPermit).to.be.an("object");
+    });
+    it("fhenixsdk encrypt", function () {
+      const fakeEnc = this.hre.fhenixsdk.encrypt(Encryptable.uint8(5));
+      expect(fakeEnc).to.be.an("object");
+      expect(fakeEnc).to.have.property("data");
+      expect(fakeEnc).to.have.property("securityZone");
+      expect(fakeEnc.securityZone).to.be.equal(0);
+    });
+    it("fhenixsdk permit management", async function () {
+      // const bobProvider = new MockProvider(createTfhePublicKey, BobWallet);
+
+      const bobProvider = new MockProvider(
+        createTfhePublicKey(),
+        BobWallet,
+        HARDHAT_NETWORK_ID,
+      );
+      const bobSigner = await bobProvider.getSigner();
+
+      // Should initialize correctly, but fhe public key for hardhat not set
+      await this.hre.fhenixsdk.initialize({
+        provider: bobProvider,
+        signer: bobSigner,
+        projects: ["TEST"],
+      });
+
+      // Should create a permit
+      const bobPermit = await this.hre.fhenixsdk.createPermit();
+      expect(bobPermit).to.be.an("object");
+
+      // Active hash should match
+      const activeHash = this.hre.fhenixsdk.getPermit()?.data?.getHash();
+      expect(bobPermit.getHash()).to.be.equal(activeHash);
+    });
   });
 
   describe("Hardhat Runtime Environment extension for localfhenix", function () {
@@ -42,6 +109,34 @@ describe("Test Fhenix Plugin", function () {
 
     it("checks that fhenixjs methods get injected on localfhenix", function () {
       assert.equal(this.hre.fhenixjs.sayHello(), "hello");
+    });
+
+    // V2
+
+    it("checks that fhenixsdk is initialized in hre", function () {
+      expect(this.hre.fhenixsdk != null).to.equal(true);
+    });
+    it("fhenixsdk can be initialized", async function () {
+      const bobProvider = new MockProvider(createTfhePublicKey(), BobWallet);
+      const bobSigner = await bobProvider.getSigner();
+
+      // Should initialize correctly, but fhe public key for hardhat not set
+      await this.hre.fhenixsdk.initialize({
+        provider: bobProvider,
+        signer: bobSigner,
+        projects: ["TEST"],
+      });
+    });
+    it("fhenixsdk.initializeWithHHSigner utility function", async function () {
+      const [signer] = await this.hre.ethers.getSigners();
+      await this.hre.fhenixsdk.initializeWithHHSigner({
+        signer,
+        projects: ["TEST"],
+      });
+
+      // Should create a permit
+      const bobPermit = await this.hre.fhenixsdk.createPermit();
+      expect(bobPermit).to.be.an("object");
     });
   });
 
