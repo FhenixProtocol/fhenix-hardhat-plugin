@@ -4,6 +4,123 @@ import fs from "fs-extra";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import chalk from "chalk";
 
+/*
+
+Purpose:
+
+`fhenixsdk.unseal` is a strongly typed unseal function that uses the `utype`
+field of `SealedBool`/`SealedUint`/`SealedAddress` to unseal data into the
+appropriate unencrypted type - eg `SealedBool` -> `bool`.
+
+This task runs after `typechain:generate-types` to replace the default SealedStruct
+type with a narrowed struct with `utype` literals. This allows `fhenixsdk.unseal`
+to correctly map SealedStructs to their unsealed type.
+
+---------------
+
+Replaces:
+
+```
+export type SealedUintStruct = { data: string; utype: BigNumberish };
+
+export type SealedUintStructOutput = [data: string, utype: bigint] & {
+  data: string;
+  utype: bigint;
+};
+```
+
+with:
+
+```
+export type SealedUintStruct = { data: string, utype: 0 | 1 | 2 | 3 | 4 | 5 };
+
+export type SealedUintStructOutput = [data: string, utype: 0 | 1 | 2 | 3 | 4 | 5] & {
+  data: string;
+  utype: 0 | 1 | 2 | 3 | 4 | 5;
+};
+```
+
+Along with similar replacements for:
+- `SealedBool` (utype: 13)
+- `SealedAddress` (utype: 12)
+
+*/
+
+task(
+  "typechain:generate-types",
+  "Overrides typechain `SealedStruct` types with `utype` literals, uses `outDir` of `typechain` config in hardhat config.",
+).setAction(async ({}, hre: HardhatRuntimeEnvironment, runSuper) => {
+  const typechainSuperRes = await runSuper();
+
+  console.log("");
+  const replaced: Record<string, string[]> = {};
+
+  // Path to replace types in
+  const typechainConfigOutDir =
+    (hre.config as any)?.typechain?.outDir ?? "typechain-types";
+  const typesPath = `${typechainConfigOutDir}/**/*.ts`;
+
+  // Get files to replace
+  const files = fg.sync(typesPath);
+
+  // Iterate files making replacements, mark any replacements for display later
+  for (const file of files) {
+    const content = fs.readFileSync(file, "utf8");
+
+    for (const replacement of replacements) {
+      if (content.includes(existingDefinitions[replacement].trim())) {
+        // Mark the file as having a replacement
+        if (replaced[file] == null) replaced[file] = [replacement];
+        else replaced[file].push(replacement);
+
+        const updatedContent = content.replace(
+          existingDefinitions[replacement].trim(),
+          updatedDefinitions[replacement].trim(),
+        );
+        fs.writeFileSync(file, updatedContent, "utf8");
+      }
+    }
+  }
+
+  // List executed replacements
+  if (Object.keys(replaced).length > 0) {
+    console.log(
+      `${chalk.green(
+        chalk.bold("fhenix-hardhat-plugin:ReplaceSealedStructTypes"),
+      )} - replacements:`,
+    );
+
+    Object.entries(replaced).forEach(([file, replacedStructs]) => {
+      // File display, `typescript-types/contracts/Counter.ts` -> `Counter.sol`
+      const fileNameDisplay = file
+        .split("/")
+        .slice(-1)[0]
+        .replace(".ts", ".sol");
+
+      // Replaced structs
+      const replacedStructsDisplay = replacedStructs
+        .map((r) => `Sealed${r[0].toUpperCase()}${r.slice(1)}`)
+        .join(" / ");
+
+      console.log(
+        `  - ${chalk.bold(fileNameDisplay)}: <${replacedStructsDisplay}>`,
+      );
+    });
+  } else {
+    console.log(
+      `${chalk.green(
+        chalk.bold("fhenix-hardhat-plugin:ReplaceSealedStructTypes"),
+      )} - done`,
+    );
+  }
+
+  console.log("");
+
+  return typechainSuperRes;
+});
+
+// CONFIG
+
 // Sealed Bool
 
 const existingSealedBoolDefinition = `
@@ -78,76 +195,3 @@ const updatedDefinitions: Record<Replacement, string> = {
   uint: updatedSealedUintDefinition,
   address: updatedSealedAddressDefinition,
 };
-
-task(
-  "typechain:generate-types",
-  "Overrides typechain `SealedStruct` types with `utype` literals, uses `outDir` of `typechain` config in hardhat config.",
-).setAction(async ({}, hre: HardhatRuntimeEnvironment, runSuper) => {
-  const typechainSuperRes = await runSuper();
-
-  console.log("");
-  const replaced: Record<string, string[]> = {};
-
-  // Path to replace types in
-  const typechainConfigOutDir =
-    (hre.config as any)?.typechain?.outDir ?? "typechain-types";
-  const typesPath = `${typechainConfigOutDir}/**/*.ts`;
-
-  // Get files to replace
-  const files = fg.sync(typesPath);
-
-  // Iterate files making replacements, mark any replacements for display later
-  for (const file of files) {
-    const content = fs.readFileSync(file, "utf8");
-
-    for (const replacement of replacements) {
-      if (content.includes(existingDefinitions[replacement].trim())) {
-        // Mark the file as having a replacement
-        if (replaced[file] == null) replaced[file] = [replacement];
-        else replaced[file].push(replacement);
-
-        const updatedContent = content.replace(
-          existingDefinitions[replacement].trim(),
-          updatedDefinitions[replacement].trim(),
-        );
-        fs.writeFileSync(file, updatedContent, "utf8");
-      }
-    }
-  }
-
-  // List executed replacements
-  if (Object.keys(replaced).length > 0) {
-    console.log(
-      `${chalk.green(
-        chalk.bold("fhenix-hardhat-plugin:ReplaceSealedStructTypes"),
-      )} - replacements:`,
-    );
-
-    Object.entries(replaced).forEach(([file, replacedStructs]) => {
-      // File display, `typescript-types/contracts/Counter.ts` -> `Counter.sol`
-      const fileNameDisplay = file
-        .split("/")
-        .slice(-1)[0]
-        .replace(".ts", ".sol");
-
-      // Replaced structs
-      const replacedStructsDisplay = replacedStructs
-        .map((r) => `Sealed${r[0].toUpperCase()}${r.slice(1)}`)
-        .join(" / ");
-
-      console.log(
-        `  - ${chalk.bold(fileNameDisplay)}: <${replacedStructsDisplay}>`,
-      );
-    });
-  } else {
-    console.log(
-      `${chalk.green(
-        chalk.bold("fhenix-hardhat-plugin:ReplaceSealedStructTypes"),
-      )} - done`,
-    );
-  }
-
-  console.log("");
-
-  return typechainSuperRes;
-});
