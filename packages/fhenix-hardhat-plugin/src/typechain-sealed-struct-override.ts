@@ -65,7 +65,7 @@ task(
 
   // Iterate files making replacements, mark any replacements for display later
   for (const file of files) {
-    const content = fs.readFileSync(file, "utf8");
+    let content = fs.readFileSync(file, "utf8");
 
     for (const replacement of replacements) {
       if (content.includes(existingDefinitions[replacement].trim())) {
@@ -73,13 +73,14 @@ task(
         if (replaced[file] == null) replaced[file] = [replacement];
         else replaced[file].push(replacement);
 
-        const updatedContent = content.replace(
+        content = content.replace(
           existingDefinitions[replacement].trim(),
           updatedDefinitions[replacement].trim(),
         );
-        fs.writeFileSync(file, updatedContent, "utf8");
       }
     }
+
+    fs.writeFileSync(file, content, "utf8");
   }
 
   // List executed replacements
@@ -87,7 +88,7 @@ task(
     console.log(
       `${chalk.green(
         chalk.bold("fhenix-hardhat-plugin:ReplaceSealedStructTypes"),
-      )} - replacements:`,
+      )} narrowing typechain SealedBool/Uint/Address types....`,
     );
 
     Object.entries(replaced).forEach(([file, replacedStructs]) => {
@@ -105,16 +106,9 @@ task(
       console.log(
         `  - ${chalk.bold(fileNameDisplay)}: <${replacedStructsDisplay}>`,
       );
+      console.log("");
     });
-  } else {
-    console.log(
-      `${chalk.green(
-        chalk.bold("fhenix-hardhat-plugin:ReplaceSealedStructTypes"),
-      )} - done`,
-    );
   }
-
-  console.log("");
 
   return typechainSuperRes;
 });
