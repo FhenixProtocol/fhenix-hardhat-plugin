@@ -1,6 +1,6 @@
 {
 	"name": "fhenix-hardhat-plugin-root",
-	"version": "0.3.3-alpha.0",
+	"version": "0.3.3-alpha.1",
 	"license": "MIT",
 	"scripts": {
 		"preinstall": "npx only-allow pnpm",
