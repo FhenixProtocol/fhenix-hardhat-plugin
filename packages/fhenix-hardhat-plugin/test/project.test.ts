@@ -66,7 +66,11 @@ describe("Test Fhenix Plugin", function () {
       expect(bobPermit).to.be.an("object");
     });
     it("fhenixsdk encrypt", function () {
-      const fakeEnc = this.hre.fhenixsdk.encrypt(Encryptable.uint8(5));
+      const fakeEncResult = this.hre.fhenixsdk.encrypt(Encryptable.uint8(5));
+      expect(fakeEncResult.success).to.be.equal(true);
+      if (!fakeEncResult.success) return;
+
+      const fakeEnc = fakeEncResult.data;
       expect(fakeEnc).to.be.an("object");
       expect(fakeEnc).to.have.property("data");
       expect(fakeEnc).to.have.property("securityZone");
@@ -83,15 +87,18 @@ describe("Test Fhenix Plugin", function () {
       const bobSigner = await bobProvider.getSigner();
 
       // Should initialize correctly, but fhe public key for hardhat not set
-      await this.hre.fhenixsdk.initialize({
+      // Should create and return a permit as a Result object
+      const bobPermitResult = await this.hre.fhenixsdk.initialize({
         provider: bobProvider,
         signer: bobSigner,
         projects: ["TEST"],
       });
+      expect(bobPermitResult.success).to.equal(true);
+      if (!bobPermitResult.success) return;
 
-      // Should create a permit
-      const bobPermit = await this.hre.fhenixsdk.createPermit();
+      const bobPermit = bobPermitResult.data;
       expect(bobPermit).to.be.an("object");
+      if (bobPermit == null) return;
 
       // Active hash should match
       const activeHash = this.hre.fhenixsdk.getPermit()?.data?.getHash();
@@ -129,14 +136,19 @@ describe("Test Fhenix Plugin", function () {
     });
     it("fhenixsdk.initializeWithHHSigner utility function", async function () {
       const [signer] = await this.hre.ethers.getSigners();
-      await this.hre.fhenixsdk.initializeWithHHSigner({
+      const permitResult = await this.hre.fhenixsdk.initializeWithHHSigner({
         signer,
         projects: ["TEST"],
       });
 
+      // Initialization creates a permit
+      expect(permitResult.data == null).to.equal(false);
+      expect(permitResult.data).to.be.an("object");
+
       // Should create a permit
-      const bobPermit = await this.hre.fhenixsdk.createPermit();
-      expect(bobPermit).to.be.an("object");
+      const bobPermitResult = await this.hre.fhenixsdk.createPermit();
+      expect(bobPermitResult.data == null).to.equal(false);
+      expect(bobPermitResult.data).to.be.an("object");
     });
   });
 

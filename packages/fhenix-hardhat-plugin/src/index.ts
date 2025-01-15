@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { HDNodeWallet, Wallet } from "ethers";
+import { HDNodeWallet, TypedDataField, Wallet } from "ethers";
 import { TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS } from "hardhat/builtin-tasks/task-names";
 import { extendConfig, extendEnvironment, task, types } from "hardhat/config";
 import { lazyObject } from "hardhat/plugins";
@@ -42,20 +42,32 @@ extendEnvironment((hre) => {
 
   hre.fhenixsdk = lazyObject(() => ({
     ...fhenixsdk,
-    initializeWithHHSigner: async ({ signer, ...params }) => {
-      fhenixsdk.initialize({
+    initializeWithHHSigner: async ({ signer, ...params }) =>
+      hre.fhenixsdk.initialize({
         provider: {
-          call: signer.provider.call,
+          call: async (...args) => {
+            try {
+              return signer.provider.call(...args);
+            } catch (e) {
+              throw new Error(
+                `fhenixsdk initializeWithHHSigner :: call :: ${e}`,
+              );
+            }
+          },
           getChainId: async () =>
             (await signer.provider.getNetwork()).chainId.toString(),
         },
         signer: {
-          signTypedData: signer.signTypedData,
-          getAddress: signer.getAddress,
+          signTypedData: async (domain, types, value) =>
+            signer.signTypedData(
+              domain,
+              types as Record<string, TypedDataField[]>,
+              value,
+            ),
+          getAddress: async () => signer.getAddress(),
         },
         ...params,
-      });
-    },
+      }),
   }));
 });
 
@@ -90,7 +102,7 @@ task(TASK_FHENIX_USE_FAUCET, "Fund an account from the faucet")
   .addOptionalParam(
     "url",
     "Optional Faucet URL",
-    "http://localhost:42000",
+    "http://localhost:3000",
     types.string,
   )
   .setAction(
