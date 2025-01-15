@@ -26,6 +26,8 @@ type FhenixsdkInitWithHHSignerParams = Expand<
 > &
   PermitV2AccessRequirementsParams;
 
+type FhenixsdkInitReturnType = ReturnType<typeof fhenixsdk["initialize"]>;
+
 declare module "hardhat/types/runtime" {
   // Fhenix extension to the Hardhat Runtime Environment.
   // This new field will be available in tasks' actions, scripts, and tests.
@@ -37,7 +39,7 @@ declare module "hardhat/types/runtime" {
        */
       initializeWithHHSigner: (
         params: FhenixsdkInitWithHHSignerParams,
-      ) => Promise<void>;
+      ) => FhenixsdkInitReturnType;
     };
   }
 }
