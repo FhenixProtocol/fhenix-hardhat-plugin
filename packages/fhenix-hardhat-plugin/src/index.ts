@@ -102,7 +102,7 @@ task(TASK_FHENIX_USE_FAUCET, "Fund an account from the faucet")
   .addOptionalParam(
     "url",
     "Optional Faucet URL",
-    "http://localhost:42000",
+    "http://localhost:3000",
     types.string,
   )
   .setAction(
