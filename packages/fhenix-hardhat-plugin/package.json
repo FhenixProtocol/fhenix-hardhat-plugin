@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "lint": "eslint --config ./.eslintrc.json --ignore-path ./.eslintignore ./**/*.ts",
-    "test": "mocha --exit --recursive --timeout 60000 'test/*.test.ts'",
+    "test": "mocha --exit --recursive --timeout 60000 --require 'mocha-fixtures.mjs' 'test/*.test.ts'",
     "build": "tsc",
     "watch": "tsc -w",
     "prepublishOnly": "npm run build"
