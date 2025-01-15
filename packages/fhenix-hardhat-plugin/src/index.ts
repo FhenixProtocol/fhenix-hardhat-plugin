@@ -24,6 +24,7 @@ import {
 import { FhenixHardhatRuntimeEnvironment } from "./FhenixHardhatRuntimeEnvironment";
 import "./type-extensions";
 import { fhenixsdk } from "fhenixjs";
+import "./typechain-sealed-struct-override";
 
 // This import is needed to let the TypeScript compiler know that it should include your type
 // extensions in your npm package's types file.
