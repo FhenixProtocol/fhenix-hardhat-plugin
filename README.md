@@ -2,7 +2,7 @@
 
 [npm]: https://www.npmjs.org/package/fhenix-hardhat-plugin
 [npm-badge]: https://img.shields.io/npm/v/fhenix-hardhat-plugin.svg
-[gha]: https://github.com/fhenixprotocol/fhenix-hardhat-plugin/actions
+[gha]: https://github.com/FhenixProtocol/fhenix-hardhat-plugin/actions/workflows/test.yml
 [gha-badge]: https://github.com/fhenixprotocol/fhenix-hardhat-plugin/actions/workflows/test.yml/badge.svg
 [license]: https://opensource.org/licenses/MIT
 [license-badge]: https://img.shields.io/badge/License-MIT-blue.svg
