@@ -49,9 +49,12 @@ describe("Fhenix Docker Tests", function () {
       }
     });
 
-    it("Should clean deployments when clean flag is set", async function () {
+    it("Should clean deployments by default", async function () {
       // Create a test deployment file/directory
-      const deploymentsPath = path.join(process.cwd(), "deployments/localfhenix");
+      const deploymentsPath = path.join(
+        process.cwd(),
+        "deployments/localfhenix",
+      );
 
       if (!fs.existsSync(deploymentsPath)) {
         fs.mkdirSync(deploymentsPath, { recursive: true });
@@ -59,8 +62,8 @@ describe("Fhenix Docker Tests", function () {
       }
 
       try {
-        // Start server with clean flag
-        await this.hre.run(TASK_FHENIX_DOCKER_START, { clean: true });
+        // Start server with default options
+        await this.hre.run(TASK_FHENIX_DOCKER_START);
 
         // Verify deployments directory was cleaned
         const deploymentsExist = fs.existsSync(deploymentsPath);
@@ -77,9 +80,12 @@ describe("Fhenix Docker Tests", function () {
       }
     });
 
-    it("Should not clean deployments when clean flag is not set", async function () {
+    it("Should not clean deployments when clean is false", async function () {
       // Create a test deployment file/directory
-      const deploymentsPath = path.join(process.cwd(), "deployments/localfhenix");
+      const deploymentsPath = path.join(
+        process.cwd(),
+        "deployments/localfhenix",
+      );
 
       if (!fs.existsSync(deploymentsPath)) {
         fs.mkdirSync(deploymentsPath, { recursive: true });
@@ -87,8 +93,8 @@ describe("Fhenix Docker Tests", function () {
       }
 
       try {
-        // Start server without clean flag
-        await this.hre.run(TASK_FHENIX_DOCKER_START);
+        // Start server with clean disabled
+        await this.hre.run(TASK_FHENIX_DOCKER_START, { clean: false });
 
         // Verify deployments directory still exists
         const deploymentsExist = fs.existsSync(deploymentsPath);

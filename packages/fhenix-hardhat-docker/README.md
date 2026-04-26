@@ -18,6 +18,8 @@ To start the container:
 pnpm hardhat localfhenix:start
 ```
 
+By default, `localfhenix:start` removes stale `deployments/localfhenix` artifacts before starting the container. To keep existing local deployments, pass `--clean false`.
+
 If starting the instance was successful, you should see the message: `Started LocalFhenix successfully at 127.0.0.1:42069`.
 
 To stop the running container:
@@ -27,4 +29,3 @@ pnpm hardhat localfhenix:stop
 ```
 
 Which will result in `Successfully shut down LocalFhenix`
-
