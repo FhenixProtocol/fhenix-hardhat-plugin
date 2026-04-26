@@ -61,7 +61,12 @@ task(TASK_FHENIX_DOCKER_START, "Starts a LocalFhenix node")
   )
   .addOptionalParam("image", `Fhenix image to use`, undefined, types.string)
   // .addOptionalParam('log', 'Log filter level (error, warn, info, debug) - default: info', undefined, types.string)
-  .addOptionalParam("clean", `Clean previous deployments`, false, types.boolean)
+  .addOptionalParam(
+    "clean",
+    `Clean previous deployments before start - default: true`,
+    true,
+    types.boolean,
+  )
   .setAction(
     async (
       {
@@ -92,15 +97,15 @@ task(TASK_FHENIX_DOCKER_START, "Starts a LocalFhenix node")
         image = image || FHENIX_DEFAULT_IMAGE;
       }
 
+      if (clean) {
+        await run(SUBTASK_FHENIX_DOCKER_CLEAN_DEPLOYMENTS);
+      }
+
       await run(SUBTASK_FHENIX_DOCKER_PULL, { image });
 
       await runLocalFhenixSeparateProcess(rpc, ws, faucet, image);
       console.info(
         chalk.green(`Started LocalFhenix successfully at 127.0.0.1:${rpc}`),
       );
-
-      if (clean) {
-        await run(SUBTASK_FHENIX_DOCKER_CLEAN_DEPLOYMENTS);
-      }
     },
   );
