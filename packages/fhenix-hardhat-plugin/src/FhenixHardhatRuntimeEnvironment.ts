@@ -120,14 +120,22 @@ export class MockProvider {
 }
 
 function hardhatMockDecrypt(value: string): bigint {
-  // Convert string into byte array
-  const byteArray = new Uint8Array(value.split("").map((c) => c.charCodeAt(0)));
-
+  // Handle hex-encoded ciphertexts (0x-prefixed or raw hex strings).
+  // The previous implementation treated each character as an ASCII char code,
+  // which would silently truncate any byte > 127 and produce wrong bigint
+  // values for any real ciphertext payload returned by sealoutput.
+  const hex = value.startsWith("0x") ? value.slice(2) : null;
+  if (hex !== null && /^[0-9a-fA-F]*$/.test(hex) && hex.length % 2 === 0) {
+    if (hex.length === 0) return BigInt(0);
+    return BigInt("0x" + hex);
+  }
+  // Fallback: treat each character as a byte (for mock string values from
+  // hardhatMockEncrypt that may not be hex-encoded).
+  const byteArray = new Uint8Array(value.split("").map((c) => c.charCodeAt(0) & 0xff));
   let result = BigInt(0);
   for (const byteArrayItem of byteArray) {
     result = (result << BigInt(8)) + BigInt(byteArrayItem);
   }
-
   return result;
 }
 
