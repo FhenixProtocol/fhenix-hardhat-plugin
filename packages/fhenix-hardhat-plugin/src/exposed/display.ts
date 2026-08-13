@@ -29,7 +29,7 @@ const printExposedFunction = (funcExposure: FuncExposures) => {
   const fragment = Fragment.from(funcExposure.func);
 
   output += `    ${chalk.bold(fragment.format())} exposes ${
-    funcExposure.exposures.length
+    funcExposure.count
   } encrypted variables:`;
   output += "\n";
 

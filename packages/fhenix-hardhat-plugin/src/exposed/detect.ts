@@ -60,7 +60,9 @@ const detectOutputVulnerability = (outputs: any[]): ExposureItem[] => {
           type: output.internalType,
           position: i,
           children: nestedExposures,
-          count: nestedExposures.length,
+          // Sum the children's counts rather than counting them, so a struct nested
+          // inside a struct still contributes every encrypted field it exposes.
+          count: nestedExposures.reduce((acc, item) => acc + item.count, 0),
         });
       }
     }
