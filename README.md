@@ -145,6 +145,20 @@ const permit = await hre.fhenixjs.createPermit("contract_address");
 
 See [FhenixJs](https://github.com/FhenixProtocol/fhenix.js) documentation for more on using the `fhenixjs` object.
 
+
+## Troubleshooting
+
+### `Transaction reverted: function returned an unexpected amount of data` on `FHE.randEuint*`
+
+Calls like `FHE.randEuint8()` / `FHE.randEuint32()` can revert with this provider error on the in-process Hardhat network or a standalone `hardhat node` when the LocalFhenix / FHEVM mock stack is not the version the Solidity library expects (see [#22](https://github.com/FhenixProtocol/fhenix-hardhat-plugin/issues/22)).
+
+Checklist:
+
+1. Prefer `pnpm localfhenix:start` (or the current LocalFhenix task in this repo) over a bare `hardhat` / `hardhat node` network for contracts that use encrypted randomness.
+2. Align `@fhevm/solidity` / `fhenixjs` / plugin versions with the versions documented for your release (mismatched precompile ABIs commonly surface as “unexpected amount of data”).
+3. Clear stale deployment artifacts before redeploying (`deployments/` / cache) so the mock network is not serving an old bytecode shape.
+4. Reproduce with a minimal contract that only calls `FHE.randEuint8()`; if that still fails after a clean LocalFhenix boot, open an issue with plugin + `@fhevm/solidity` + `fhenixjs` versions and whether you used LocalFhenix or plain Hardhat.
+
 ## Support
 
 For issues, suggestions, or contributions, please open an issue or pull request in the GitHub [repository](https://github.com/FhenixProtocol/fhenix-hardhat-plugin/).
